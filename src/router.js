@@ -5,6 +5,8 @@ import About from "./views/About.vue";
 
 // Routes: Usuario
 import usuarioRoute from "./router/routes/usuarioRoute";
+// Routes: Catalogo
+import catalogoRoute from "./router/routes/catalogoRoute";
 
 const routes = [
   {
@@ -17,7 +19,8 @@ const routes = [
     name: "about",
     component: About
   },
-  ...usuarioRoute
+  ...usuarioRoute,
+  ...catalogoRoute
 ];
 console.log("routes", routes);
 
