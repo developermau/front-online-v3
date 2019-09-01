@@ -1,0 +1,3 @@
+export function yourGuard(to, from, next) {
+  // ...
+}
