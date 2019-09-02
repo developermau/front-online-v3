@@ -1,8 +1,10 @@
 <template>
-  <section id="Categoria">
+  <v-container>
     <h1 class="text-center">{{categoria.ca_nombre}}</h1>
-    <ProductoList :productos="categoria.productos" />
-  </section>
+    <v-card>
+      <ProductoList :productos="categoria.productos" />
+    </v-card>
+  </v-container>
 </template>
 
 <script>

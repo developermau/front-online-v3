@@ -5,6 +5,7 @@
       :producto="producto"
       :key="producto.pr_producto"
     />
+    <v-spacer></v-spacer>
   </v-container>
 </template>
 
