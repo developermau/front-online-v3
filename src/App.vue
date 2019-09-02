@@ -11,10 +11,16 @@
         <v-btn text to="/catalogo">Catálogo</v-btn>
         <v-btn text to="/login">Ingresar</v-btn>
         <v-btn text to="/register">Registrarse</v-btn>
-        <v-btn text to="/cart">
+        <v-btn text to="/carrito">
           <v-badge color="warning">
             <template v-slot:badge>{{countProductsInCart}}</template>
             <v-icon>mdi-cart</v-icon>
+          </v-badge>
+        </v-btn>
+        <v-btn text to="/favoritos">
+          <v-badge color="error">
+            <template v-slot:badge>{{countProductsInCart}}</template>
+            <v-icon>mdi-heart</v-icon>
           </v-badge>
         </v-btn>
         <v-btn text to="/acerca">Acerca</v-btn>
