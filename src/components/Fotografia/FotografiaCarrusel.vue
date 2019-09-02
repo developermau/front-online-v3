@@ -1,12 +1,10 @@
 <template>
-  <v-carousel>
-    <v-carousel-item v-for="color in colors" :key="color">
-      <v-sheet :color="color" height="100%" tile>
-        <v-row class="fill-height" align="center" justify="center">
-          <div class="display-3">Slide</div>
-        </v-row>
-      </v-sheet>
-    </v-carousel-item>
+  <v-carousel progress>
+    <v-carousel-item
+      v-for="fotografia in fotografias"
+      :key="fotografia.fo_fotografia"
+      :src="fotografia.fo_ubicacion"
+    ></v-carousel-item>
   </v-carousel>
 </template>
 
