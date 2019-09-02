@@ -6,11 +6,11 @@ export default {
     return Repository.get(`${resource}`);
   },
 
-  getPost(postId) {
-    return Repository.get(`${resource}/${postId}`);
+  getProducto(productoId) {
+    return Repository.get(`${resource}/${productoId}`);
   },
 
-  createPost(payload) {
+  createProducto(payload) {
     return Repository.post(`${resource}`, payload);
   }
 };

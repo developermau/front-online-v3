@@ -10,23 +10,9 @@
         <v-btn text to="/">Home</v-btn>
         <v-btn text to="/catalogo">Catálogo</v-btn>
         <v-btn text to="/acerca">Acerca</v-btn>
-      </v-toolbar-items>
-      <v-menu class="hidden-md-and-up">
-        <!-- <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon> -->
-        <v-list>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-btn text to="/">Home</v-btn>
-            </v-list-tile-content>
-            <v-list-tile-content>
-              <v-btn text to="/catalogo">Catálogo</v-btn>
-            </v-list-tile-content>
-            <v-list-tile-content>
-              <v-btn text to="/acerca">Acerca</v-btn>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+        <v-btn text to="/login">Ingresar</v-btn>
+        <v-btn text to="/register">Registrarse</v-btn>
+      </v-toolbar-items>      
     </v-app-bar>
     <v-content>
       <router-view />

@@ -1,7 +1,9 @@
 import ProductosRepository from "../api/productosRepository";
+import CategoriasRepository from "../api/categoriasRepository";
 
 const repositories = {
-  productos: ProductosRepository
+  productos: ProductosRepository,
+  categorias: CategoriasRepository
   // other repositories ...
 };
 

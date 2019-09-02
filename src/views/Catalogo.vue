@@ -1,33 +1,47 @@
 <template>
-  <section id="Catalogo"></section>
+  <v-container fluid grid-list-sm>
+    <h1 class="text-center">Catálogo</h1>
+    <v-layout wrap>
+      <v-card id="Categoria" class="mx-auto">
+        <v-card-text>
+          <Categoria
+            v-for="categoria in categorias"
+            :categoria="categoria"
+            :key="categoria.ca_categoria"
+          />
+        </v-card-text>
+      </v-card>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
+// Vue components
+import Categoria from "../components/Catalogo/Categoria";
+
+// Repository Factory
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
-const ProductosRepository = RepositoryFactory.get("productos");
+// Repositories
+const CategoriasRepository = RepositoryFactory.get("categorias");
 
 export default {
   name: "Catalogo",
+  components: { Categoria },
   data() {
     return {
       isLoading: false,
-      productos: []
+      categorias: []
     };
   },
   created() {
-    this.fetch();
+    this.fetchCategorias();
   },
   methods: {
-    async fetch() {
+    async fetchCategorias() {
       this.isLoading = true;
-      const { data } = await ProductosRepository.get();
+      const { data } = await CategoriasRepository.get();
       this.isLoading = false;
-      this.productos = data;
-    }
-  },
-  computed: {
-    computedproductos() {
-      return this.productos.slice(0, 10);
+      this.categorias = data;
     }
   }
 };
