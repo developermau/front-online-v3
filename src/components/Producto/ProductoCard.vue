@@ -43,7 +43,7 @@ export default {
   methods: {
     showProduct() {
       // -> /producto/123
-      const productoId = this.product.pr_producto;
+      const productoId = this.producto.pr_producto;
       this.$router.push({ name: "producto", params: { id: productoId } });
     },
     addToCart() {

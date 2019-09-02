@@ -7,6 +7,8 @@ import About from "./views/About.vue";
 import usuarioRoute from "./router/routes/usuarioRoute";
 // Routes: Catalogo
 import catalogoRoute from "./router/routes/catalogoRoute";
+// Routes: Producto
+import productoRoute from "./router/routes/productoRoute";
 
 const routes = [
   {
@@ -20,7 +22,8 @@ const routes = [
     component: About
   },
   ...usuarioRoute,
-  ...catalogoRoute
+  ...catalogoRoute,
+  ...productoRoute
 ];
 console.log("routes", routes);
 
