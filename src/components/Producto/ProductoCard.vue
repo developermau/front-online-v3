@@ -48,9 +48,10 @@ export default {
     },
     addToCart() {
       let productInCart = {
-        ...this.product,
+        ...this.producto,
         cantidad: 1
       };
+      console.log("productInCart", productInCart);
     },
     addToFavorites() {
       console.log("Añadiendo a favoritos...", this.product);

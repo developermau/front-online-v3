@@ -10,17 +10,11 @@
             class="grey lighten-2"
             max-width="500"
             max-height="300"
-          ></v-img> -->
+          ></v-img>-->
           <FotografiaCarrusel :fotografias="producto.fotografias" />
         </v-col>
         <v-col cols="5">
-          <v-card>
-            <v-card-title>{{producto.pr_nombre}}</v-card-title>
-            <v-card-text>{{producto.pr_descripcion}}</v-card-text>
-            <v-card-actions>
-              <v-btn dark color="success">Añadir al carrito</v-btn>
-            </v-card-actions>
-          </v-card>
+          <ProductoCardDetails :producto="producto" />
         </v-col>
       </v-row>
     </v-container>
@@ -30,6 +24,7 @@
 <script>
 // Vue components
 import FotografiaCarrusel from "../components/Fotografia/FotografiaCarrusel";
+import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
 // Repository Factory
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
 // Repositories
@@ -38,7 +33,7 @@ const ProductosRepository = RepositoryFactory.get("productos");
 export default {
   props: ["id"],
   name: "Producto",
-  components: { FotografiaCarrusel },
+  components: { FotografiaCarrusel, ProductoCardDetails },
   data: function() {
     return {
       producto: {}
