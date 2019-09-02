@@ -9,10 +9,16 @@
       <v-toolbar-items>
         <v-btn text to="/">Home</v-btn>
         <v-btn text to="/catalogo">Catálogo</v-btn>
-        <v-btn text to="/acerca">Acerca</v-btn>
         <v-btn text to="/login">Ingresar</v-btn>
         <v-btn text to="/register">Registrarse</v-btn>
-      </v-toolbar-items>      
+        <v-btn text to="/cart">
+          <v-badge color="warning">
+            <template v-slot:badge>{{countProductsInCart}}</template>
+            <v-icon>mdi-cart</v-icon>
+          </v-badge>
+        </v-btn>
+        <v-btn text to="/acerca">Acerca</v-btn>
+      </v-toolbar-items>
     </v-app-bar>
     <v-content>
       <router-view />
@@ -22,6 +28,11 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  computed: {
+    countProductsInCart: function() {
+      return 0;
+    }
+  }
 };
 </script>
