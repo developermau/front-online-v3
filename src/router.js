@@ -9,6 +9,8 @@ import usuarioRoute from "./router/routes/usuarioRoute";
 import catalogoRoute from "./router/routes/catalogoRoute";
 // Routes: Producto
 import productoRoute from "./router/routes/productoRoute";
+// Routes: Carrito
+import carritoRoute from "./router/routes/carritoRoute";
 
 const routes = [
   {
@@ -23,7 +25,8 @@ const routes = [
   },
   ...usuarioRoute,
   ...catalogoRoute,
-  ...productoRoute
+  ...productoRoute,
+  ...carritoRoute
 ];
 console.log("routes", routes);
 
