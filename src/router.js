@@ -13,6 +13,8 @@ import productoRoute from "./router/routes/productoRoute";
 import carritoRoute from "./router/routes/carritoRoute";
 // Routes: Favoritos
 import favoritoRoute from "./router/routes/favoritoRoute";
+// Routes: Inventario
+import inventarioRoute from "./router/routes/inventarioRoute";
 
 const routes = [
   {
@@ -29,7 +31,8 @@ const routes = [
   ...catalogoRoute,
   ...productoRoute,
   ...carritoRoute,
-  ...favoritoRoute
+  ...favoritoRoute,
+  ...inventarioRoute
 ];
 
 Vue.use(Router);

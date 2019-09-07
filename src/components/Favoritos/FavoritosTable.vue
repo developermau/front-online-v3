@@ -69,6 +69,7 @@
 
 <script>
 export default {
+  props: ["favoritos"],
   data() {
     return {
       dialog: false,

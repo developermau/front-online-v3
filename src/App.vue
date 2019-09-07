@@ -9,6 +9,7 @@
       <v-toolbar-items>
         <v-btn text to="/">Home</v-btn>
         <v-btn text to="/catalogo">Catálogo</v-btn>
+        <v-btn text to="/inventario">Inventario</v-btn>
         <v-btn text to="/login">Ingresar</v-btn>
         <v-btn text to="/register">Registrarse</v-btn>
         <v-btn text to="/carrito">
