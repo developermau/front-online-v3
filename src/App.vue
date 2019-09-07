@@ -23,7 +23,7 @@
             <v-icon>mdi-heart</v-icon>
           </v-badge>
         </v-btn>
-        <v-btn text to="/acerca">Acerca</v-btn>
+        <v-btn text to="/about">Acerca</v-btn>
       </v-toolbar-items>
     </v-app-bar>
     <v-content>
