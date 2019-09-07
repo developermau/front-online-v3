@@ -40,15 +40,15 @@ export default {
   },
   methods: {
     removeProductFromCart() {
-      this.$store.dispatch("cart/removeProduct", this.product);
+      this.$store.dispatch("cart/removeProduct", this.producto);
     },
     changeQuantity() {
-      let productUpdated = { ...this.product, cantidad: this.cantidad };
+      let productUpdated = { ...this.producto, cantidad: this.cantidad };
     }
   },
   watch: {
     "producto.cantidad": function(newCantidad, oldCantidad) {
-      if (this.product !== null && this.product !== undefined) {
+      if (this.producto !== null && this.producto !== undefined) {
         // watch it
         this.total = this.producto.pr_precio_bs * newCantidad;
 
