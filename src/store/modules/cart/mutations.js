@@ -1,6 +1,5 @@
 const mutations = {
   addProductToState(state, product) {
-    console.log("mutation", product);
     state.products.push(product);
   },
   resetState(state) {

@@ -28,7 +28,6 @@ const routes = [
   ...productoRoute,
   ...carritoRoute
 ];
-console.log("routes", routes);
 
 Vue.use(Router);
 

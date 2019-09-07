@@ -2,17 +2,17 @@
   <v-container fluid grid-list-sm>
     <h1 class="text-center">Carrito de compras</h1>
     <v-layout wrap>
-      <CarritoProductoList :productos="productsInCart" />
+      <ProductsInCartList :productos="productsInCart" />
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import CarritoProductoList from "../components/Carrito/CarritoProductoList";
+import ProductsInCartList from "../components/Carrito/ProductsInCartList";
 
 export default {
   name: "Carrito",
-  components: { CarritoProductoList },
+  components: { ProductsInCartList },
   data() {
     return {
       productsInCart: []

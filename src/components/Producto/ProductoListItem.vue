@@ -44,7 +44,6 @@ export default {
         ...this.producto,
         cantidad: 1
       };
-      console.log("productInCart", productInCart);
       this.$store.dispatch("cart/addProductToCart", productInCart);
     },
     addToFavorites() {

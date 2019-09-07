@@ -1,6 +1,5 @@
 const actions = {
   addProductToCart({ commit }, product) {
-    console.log("action", product);
     commit("addProductToState", product);
   },
   resetCart({ commit }) {
