@@ -4,7 +4,10 @@
     <v-layout wrap>
       <v-row>
         <v-col>
-          <ProductsInCartList :productos="productsInCart" />
+          <v-card dark>
+            <v-card-title>Productos Añadidos</v-card-title>
+            <ProductsInCartList :productos="productsInCart" />
+          </v-card>
         </v-col>
         <v-col>
           <DetailsCart />
