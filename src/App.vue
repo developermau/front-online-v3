@@ -19,7 +19,7 @@
         </v-btn>
         <v-btn text to="/favoritos">
           <v-badge color="error">
-            <template v-slot:badge>{{countProductsInCart}}</template>
+            <template v-slot:badge>{{countProductsInFavorites}}</template>
             <v-icon>mdi-heart</v-icon>
           </v-badge>
         </v-btn>
@@ -37,6 +37,9 @@ export default {
   name: "App",
   computed: {
     countProductsInCart: function() {
+      return this.$store.getters["cart/countProductsInCart"];
+    },
+    countProductsInFavorites: function() {
       return 0;
     }
   }
