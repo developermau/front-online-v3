@@ -1,5 +1,5 @@
 <template>
-  <v-card dark color="primary">
+  <v-card dark color="secondary">
     <v-row align="center" justify="center">
       <v-col cols="3">
         <v-img
@@ -12,17 +12,45 @@
         ></v-img>
       </v-col>
       <v-col cols="9">
-        <h3>{{producto.pr_nombre}}</h3>
+        <v-card-text>
+          <h3>{{producto.pr_nombre}}</h3>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-icon color="primary accent-4" @click="showProduct">mdi-eye</v-icon>
+          <v-spacer></v-spacer>
+          <v-icon color="primary accent-4" @click="addToCart">mdi-cart</v-icon>
+          <v-spacer></v-spacer>
+          <v-icon color="primary accent-4" @click="addToFavorites">mdi-heart</v-icon>
+          <v-spacer></v-spacer>
+        </v-card-actions>
       </v-col>
     </v-row>
-    <v-spacer></v-spacer>
   </v-card>
 </template>
 
 <script>
 export default {
   props: ["producto"],
-  name: "ProductoListItem"
+  name: "ProductoListItem",
+  methods: {
+    showProduct() {
+      // -> /producto/123
+      const productoId = this.producto.pr_producto;
+      this.$router.push({ name: "producto", params: { id: productoId } });
+    },
+    addToCart() {
+      let productInCart = {
+        ...this.producto,
+        cantidad: 1
+      };
+      console.log("productInCart", productInCart);
+      this.$store.dispatch("cart/addProductToCart", productInCart);
+    },
+    addToFavorites() {
+      console.log("Añadiendo a favoritos...", this.product);
+    }
+  }
 };
 </script>
 

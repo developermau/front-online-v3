@@ -25,11 +25,11 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-icon color="deep-purple accent-4" @click="showProduct">mdi-eye</v-icon>
+        <v-icon color="primary accent-4" @click="showProduct">mdi-eye</v-icon>
         <v-spacer></v-spacer>
-        <v-icon color="deep-purple accent-4" @click="addToCart">mdi-cart</v-icon>
+        <v-icon color="primary accent-4" @click="addToCart">mdi-cart</v-icon>
         <v-spacer></v-spacer>
-        <v-icon color="deep-purple accent-4" @click="addToFavorites">mdi-heart</v-icon>
+        <v-icon color="primary accent-4" @click="addToFavorites">mdi-heart</v-icon>
         <v-spacer></v-spacer>
       </v-card-actions>
     </v-card>
