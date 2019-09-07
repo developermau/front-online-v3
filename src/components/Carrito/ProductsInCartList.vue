@@ -1,12 +1,14 @@
 <template>
-  <v-list two-line>
-    <v-subheader>Productos Añadidos</v-subheader>
-    <v-list-item-group v-model="selected" active-class="primary--text">
-      <ProductoCarrito v-for="(product, index) in productos" :key="index" :producto="product">
-        <v-divider v-if="index + 1 < productos.length" :key="index"></v-divider>
-      </ProductoCarrito>
-    </v-list-item-group>
-  </v-list>
+  <v-card dark>
+    <v-card-title>Productos Añadidos</v-card-title>
+    <v-list shaped rounded two-line>
+      <v-list-item-group v-model="selected" active-class="primary--text">
+        <ProductoCarrito v-for="(product, index) in productos" :key="index" :producto="product">
+          <v-divider v-if="index + 1 < productos.length" :key="index"></v-divider>
+        </ProductoCarrito>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
 </template>
 
 <script>
@@ -21,10 +23,9 @@ export default {
       selected: [1]
     };
   },
-  created(){
+  created() {
     console.log(this.productos);
   }
-
 };
 </script>
 

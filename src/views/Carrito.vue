@@ -2,12 +2,14 @@
   <v-container fluid>
     <h1 class="text-center">Carrito de compras</h1>
     <v-layout wrap>
-      <v-flex xs8>
-        <ProductsInCartList :productos="productsInCart" />
-      </v-flex>
-      <v-flex xs4>
-        <DetailsCart />
-      </v-flex>
+      <v-row>
+        <v-col>
+          <ProductsInCartList :productos="productsInCart" />
+        </v-col>
+        <v-col>
+          <DetailsCart />
+        </v-col>
+      </v-row>
     </v-layout>
   </v-container>
 </template>
