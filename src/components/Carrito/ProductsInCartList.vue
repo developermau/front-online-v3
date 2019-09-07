@@ -1,7 +1,7 @@
 <template>
   <v-list two-line>
     <v-list-item-group v-model="selected" multiple active-class="pink--text">
-      <ProductoCarrito v-for="(product, index) in productos" :key="index" :product="product">
+      <ProductoCarrito v-for="(product, index) in productos" :key="index" :producto="product">
         <v-divider v-if="index + 1 < productos.length" :key="index"></v-divider>
       </ProductoCarrito>
     </v-list-item-group>

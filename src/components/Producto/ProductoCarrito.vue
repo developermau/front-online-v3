@@ -1,53 +1,89 @@
 <template>
-  <v-card dark color="secondary">
-    <v-row align="center" justify="center">
-      <v-col cols="3">
-        <v-img
-          src="https://picsum.photos/id/11/500/300"
-          lazy-src="https://picsum.photos/id/11/10/6"
-          aspect-ratio="1"
-          class="grey lighten-2"
-          max-width="500"
-          max-height="300"
-        ></v-img>
-      </v-col>
-      <v-col cols="9">
-        <v-card-text>
-          <h3>{{producto.pr_nombre}}</h3>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-icon color="primary accent-4" @click="showProduct">mdi-eye</v-icon>
-          <v-spacer></v-spacer>
-          <v-icon color="primary accent-4" @click="addToCart">mdi-cart</v-icon>
-          <v-spacer></v-spacer>
-          <v-icon color="primary accent-4" @click="addToFavorites">mdi-heart</v-icon>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-col>
-    </v-row>
-  </v-card>
+  <v-list-item>
+    <template v-slot:default="{ active, toggle }">
+      <v-btn text @click="removeProductFromCart">
+        <v-icon>mdi-cart-remove</v-icon>
+      </v-btn>
+      <v-list-item-content>
+        <v-list-item-title v-text="producto.pr_nombre"></v-list-item-title>
+        <v-list-item-subtitle class="text--primary" v-text="producto.pr_marca"></v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-action>
+        <v-text-field
+          v-model="producto.cantidad"
+          label="Cantidad"
+          max="9999"
+          min="-9999"
+          step="1"
+          style="width: 125px"
+          type="number"
+          @keydown="false"
+        ></v-text-field>
+      </v-list-item-action>
+      <v-list-item-action>
+        <v-list-item-title>
+          <h4 class="text-center">{{totalByProduct}} Bs.</h4>
+        </v-list-item-title>
+      </v-list-item-action>
+    </template>
+  </v-list-item>
 </template>
 
 <script>
 export default {
   props: ["producto"],
   name: "ProductoListItem",
+  data() {
+    return {
+      total: 0
+    };
+  },
   methods: {
-    showProduct() {
-      // -> /producto/123
-      const productoId = this.producto.pr_producto;
-      this.$router.push({ name: "producto", params: { id: productoId } });
+    removeProductFromCart() {
+      this.$store.dispatch("cart/removeProduct", this.product);
     },
-    addToCart() {
-      let productInCart = {
-        ...this.producto,
-        cantidad: 1
-      };
-      this.$store.dispatch("cart/addProductToCart", productInCart);
+    changeQuantity() {
+      let productUpdated = { ...this.product, cantidad: this.cantidad };
+    }
+  },
+  watch: {
+    "producto.cantidad": function(newCantidad, oldCantidad) {
+      if (this.product !== null && this.product !== undefined) {
+        // watch it
+        this.total = this.producto.pr_precio_bs * newCantidad;
+
+        // Vuex: actions
+        let detailProductUpdated = {
+          pr_producto: this.producto.pr_producto,
+          cantidad: newCantidad
+        };
+
+        this.$store.dispatch(
+          "cart/updateCantidadByProducto",
+          detailProductUpdated
+        );
+      } else {
+        console.error("Error: el producto es invalido...");
+      }
+    }
+  },
+  computed: {
+    firstPhotography() {
+      let fotografia = {};
+      let fotografias = this.producto.fotografias;
+
+      if (fotografias !== null && fotografias !== undefined) {
+        if (Array.isArray(fotografias)) {
+          if (fotografias.length > 0) {
+            fotografia = fotografias[0].fo_ubicacion;
+          }
+        }
+      }
+
+      return fotografia;
     },
-    addToFavorites() {
-      console.log("Añadiendo a favoritos...", this.product);
+    totalByProduct() {
+      return this.producto.cantidad * this.producto.pr_precio_bs;
     }
   }
 };
