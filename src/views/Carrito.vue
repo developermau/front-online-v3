@@ -5,9 +5,8 @@
       <v-flex xs8>
         <ProductsInCartList :productos="productsInCart" />
       </v-flex>
-      <v-spacer></v-spacer>
       <v-flex xs4>
-        <ProductsInCartList :productos="productsInCart" />
+        <DetailsCart />
       </v-flex>
     </v-layout>
   </v-container>
@@ -15,10 +14,11 @@
 
 <script>
 import ProductsInCartList from "../components/Carrito/ProductsInCartList";
+import DetailsCart from "../components/Carrito/DetailsCart";
 
 export default {
   name: "Carrito",
-  components: { ProductsInCartList },
+  components: { ProductsInCartList, DetailsCart },
   data() {
     return {
       productsInCart: []
