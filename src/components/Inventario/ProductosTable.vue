@@ -61,7 +61,8 @@
     </template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+      <v-icon small class="mr-2" @click="deleteItem(item)">mdi-delete</v-icon>
+      <v-icon small class="mr-2" @click="callProveedor(item)">mdi-phone</v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -190,7 +191,9 @@ export default {
       confirm("Are you sure you want to delete this item?") &&
         this.productos.splice(index, 1);
     },
-
+    callProveedor(item) {
+      console.log("calling...", item);
+    },
     close() {
       this.dialog = false;
       setTimeout(() => {
