@@ -50,19 +50,21 @@
     </template>
     <template v-slot:body.append>
       <tr>
-        <td></td>
         <td>
-          <v-text-field v-model="pr_stock" type="number" label="Less than"></v-text-field>
+          <v-text-field v-model="searchItem.pr_nombre" type="text" label="Contiene"></v-text-field>
         </td>
         <td>
-          <v-text-field v-model="fat" type="number" label="Less than"></v-text-field>
+          <v-text-field v-model="searchItem.pr_marca" type="text" label="Contiene"></v-text-field>
         </td>
-        <td colspan="3"></td>
+        <td>
+          <v-text-field v-model="searchItem.pr_stock" type="number" label="Menor que"></v-text-field>
+        </td>
+        <td colspan="2"></td>
       </tr>
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
-      <v-icon small @click="deleteItem(item)">delete</v-icon>
+      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="fetchAllProductos">Reset</v-btn>
@@ -83,9 +85,12 @@ export default {
       dialog: false,
       search: "",
       // Filters
-      pr_stock: "",
-      fat: "",
       editedIndex: -1,
+      searchItem: {
+        pr_nombre: "",
+        pr_marca: "",
+        pr_stock: 0
+      },
       editedItem: {
         name: "",
         pr_stock: 0,
@@ -115,20 +120,36 @@ export default {
           text: "Nombre",
           align: "left",
           sortable: true,
-          value: "pr_nombre"
+          value: "pr_nombre",
+          filter: value => {
+            if (!this.searchItem.pr_nombre) return true;
+
+            return value.includes(this.searchItem.pr_nombre);
+          }
         },
         {
           text: "Marca",
           align: "left",
           sortable: true,
-          value: "pr_marca"
+          value: "pr_marca",
+          filter: value => {
+            if (!this.searchItem.pr_marca) return true;
+
+            return value.includes(this.searchItem.pr_marca);
+          }
         },
         {
           text: "Stock",
           align: "left",
           sortable: true,
-          value: "pr_stock"
-        }
+          value: "pr_stock",
+          filter: value => {
+            if (!this.searchItem.pr_stock) return true;
+
+            return value < parseInt(this.searchItem.pr_stock);
+          }
+        },
+        { text: "Actions", value: "action", sortable: false }
       ];
     }
   },
@@ -173,11 +194,11 @@ export default {
       }
       this.close();
     },
-    getColor (pr_stock) {
-        if (pr_stock < 10) return 'red'
-        else if (pr_stock >= 10 && pr_stock <= 20) return 'orange'
-        else if (pr_stock > 20) return 'green'
-      },
+    getColor(pr_stock) {
+      if (pr_stock < 10) return "red";
+      else if (pr_stock >= 10 && pr_stock <= 20) return "orange";
+      else if (pr_stock > 20) return "green";
+    }
   }
 };
 </script>
