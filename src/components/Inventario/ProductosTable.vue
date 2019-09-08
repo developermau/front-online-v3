@@ -56,13 +56,16 @@
         <td>
           <v-text-field v-model="searchItem.pr_stock" type="number" label="Menor que"></v-text-field>
         </td>
+        <td>
+          <v-text-field v-model="searchItem.proveedor.pr_nombre" type="text" label="Contiene"></v-text-field>
+        </td>
         <td colspan="2"></td>
       </tr>
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon small class="mr-2" @click="deleteItem(item)">mdi-delete</v-icon>
-      <v-icon small class="mr-2" @click="callProveedor(item)">mdi-phone</v-icon>
+      <v-icon size="20px" @click="editItem(item)">mdi-pencil</v-icon>
+      <v-icon size="20px" @click="deleteItem(item)">mdi-delete</v-icon>
+      <v-icon size="20px" @click="callProveedor(item)">mdi-phone</v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -88,6 +91,10 @@ export default {
       categoria: {
         ca_categoria: 0,
         ca_nombre: ""
+      },
+      proveedor: {
+        pr_proveedor: 0,
+        pr_nombre: ""
       }
     },
     defaultItem: {
@@ -97,6 +104,10 @@ export default {
       categoria: {
         ca_categoria: 0,
         ca_nombre: ""
+      },
+      proveedor: {
+        pr_proveedor: 0,
+        pr_nombre: ""
       }
     },
     searchItem: {
@@ -106,6 +117,10 @@ export default {
       categoria: {
         ca_categoria: 0,
         ca_nombre: ""
+      },
+      proveedor: {
+        pr_proveedor: 0,
+        pr_nombre: ""
       }
     },
     isLoading: false
@@ -122,6 +137,7 @@ export default {
           align: "left",
           sortable: true,
           value: "categoria.ca_nombre",
+          width: "1%",
           filter: value => {
             if (!this.searchItem.categoria.ca_nombre) return true;
             return value.includes(this.searchItem.categoria.ca_nombre);
@@ -132,6 +148,7 @@ export default {
           align: "left",
           sortable: true,
           value: "pr_nombre",
+          width: "1%",
           filter: value => {
             if (!this.searchItem.pr_nombre) return true;
             return value.includes(this.searchItem.pr_nombre);
@@ -142,6 +159,7 @@ export default {
           align: "left",
           sortable: true,
           value: "pr_marca",
+          width: "1%",
           filter: value => {
             if (!this.searchItem.pr_marca) return true;
             return value.includes(this.searchItem.pr_marca);
@@ -152,12 +170,24 @@ export default {
           align: "left",
           sortable: true,
           value: "pr_stock",
+          width: "1%",
           filter: value => {
             if (!this.searchItem.pr_stock) return true;
             return value < parseInt(this.searchItem.pr_stock);
           }
         },
-        { text: "Actions", value: "action", sortable: false }
+        {
+          text: "Proveedor",
+          align: "left",
+          sortable: true,
+          value: "proveedor.pr_nombre",
+          width: "1%",
+          filter: value => {
+            if (!this.searchItem.proveedor.pr_nombre) return true;
+            return value.includes(this.searchItem.proveedor.pr_nombre);
+          }
+        },
+        { text: "Actions", value: "action", width: "2%", sortable: false }
       ];
     }
   },
