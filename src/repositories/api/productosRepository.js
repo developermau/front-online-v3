@@ -17,4 +17,8 @@ export default {
   deleteProducto(productoId) {
     return Repository.delete(`${resource}/${productoId}`);
   },
+
+  updateProducto(productoId, payload) {
+    return Repository.put(`${resource}/${productoId}`, payload);
+  },
 };
