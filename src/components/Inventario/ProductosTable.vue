@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="productos" :search="search">
+  <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>My CRUD</v-toolbar-title>
@@ -21,7 +21,7 @@
                     <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.pr_stock" label="pr_stock"></v-text-field>
+                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
@@ -45,112 +45,54 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.pr_stock="{ item }">
-      <v-chip :color="getColor(item.pr_stock)" dark>{{ item.pr_stock }}</v-chip>
-    </template>
-    <template v-slot:body.append>
-      <tr>
-        <td>
-          <v-text-field v-model="searchItem.pr_nombre" type="text" label="Contiene"></v-text-field>
-        </td>
-        <td>
-          <v-text-field v-model="searchItem.pr_marca" type="text" label="Contiene"></v-text-field>
-        </td>
-        <td>
-          <v-text-field v-model="searchItem.pr_stock" type="number" label="Menor que"></v-text-field>
-        </td>
-        <td colspan="2"></td>
-      </tr>
-    </template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="fetchAllProductos">Reset</v-btn>
+      <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
   </v-data-table>
 </template>
 
 <script>
-// Repository Factory
-import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
-// Repositories
-const ProductosRepository = RepositoryFactory.get("productos");
-
 export default {
-  data() {
-    return {
-      productos: [],
-      dialog: false,
-      search: "",
-      // Filters
-      editedIndex: -1,
-      searchItem: {
-        pr_nombre: "",
-        pr_marca: "",
-        pr_stock: 0
+  data: () => ({
+    dialog: false,
+    headers: [
+      {
+        text: "Dessert (100g serving)",
+        align: "left",
+        sortable: false,
+        value: "name"
       },
-      editedItem: {
-        name: "",
-        pr_stock: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0
-      },
-      defaultItem: {
-        name: "",
-        pr_stock: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0
-      }
-    };
-  },
-  created() {
-    this.fetchAllProductos();
-  },
+      { text: "Calories", value: "calories" },
+      { text: "Fat (g)", value: "fat" },
+      { text: "Carbs (g)", value: "carbs" },
+      { text: "Protein (g)", value: "protein" },
+      { text: "Actions", value: "action", sortable: false }
+    ],
+    desserts: [],
+    editedIndex: -1,
+    editedItem: {
+      name: "",
+      calories: 0,
+      fat: 0,
+      carbs: 0,
+      protein: 0
+    },
+    defaultItem: {
+      name: "",
+      calories: 0,
+      fat: 0,
+      carbs: 0,
+      protein: 0
+    }
+  }),
+
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
-    headers() {
-      return [
-        {
-          text: "Nombre",
-          align: "left",
-          sortable: true,
-          value: "pr_nombre",
-          filter: value => {
-            if (!this.searchItem.pr_nombre) return true;
-
-            return value.includes(this.searchItem.pr_nombre);
-          }
-        },
-        {
-          text: "Marca",
-          align: "left",
-          sortable: true,
-          value: "pr_marca",
-          filter: value => {
-            if (!this.searchItem.pr_marca) return true;
-
-            return value.includes(this.searchItem.pr_marca);
-          }
-        },
-        {
-          text: "Stock",
-          align: "left",
-          sortable: true,
-          value: "pr_stock",
-          filter: value => {
-            if (!this.searchItem.pr_stock) return true;
-
-            return value < parseInt(this.searchItem.pr_stock);
-          }
-        },
-        { text: "Actions", value: "action", sortable: false }
-      ];
     }
   },
 
@@ -159,13 +101,87 @@ export default {
       val || this.close();
     }
   },
+
+  created() {
+    this.initialize();
+  },
+
   methods: {
-    async fetchAllProductos() {
-      this.isLoading = true;
-      const { data } = await ProductosRepository.get();
-      this.isLoading = false;
-      this.productos = data;
+    initialize() {
+      this.desserts = [
+        {
+          name: "Frozen Yogurt",
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0
+        },
+        {
+          name: "Ice cream sandwich",
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3
+        },
+        {
+          name: "Eclair",
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
+          protein: 6.0
+        },
+        {
+          name: "Cupcake",
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
+          protein: 4.3
+        },
+        {
+          name: "Gingerbread",
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
+          protein: 3.9
+        },
+        {
+          name: "Jelly bean",
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
+          protein: 0.0
+        },
+        {
+          name: "Lollipop",
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
+          protein: 0
+        },
+        {
+          name: "Honeycomb",
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
+          protein: 6.5
+        },
+        {
+          name: "Donut",
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
+          protein: 4.9
+        },
+        {
+          name: "KitKat",
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7
+        }
+      ];
     },
+
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -193,15 +209,7 @@ export default {
         this.desserts.push(this.editedItem);
       }
       this.close();
-    },
-    getColor(pr_stock) {
-      if (pr_stock < 10) return "red";
-      else if (pr_stock >= 10 && pr_stock <= 20) return "orange";
-      else if (pr_stock > 20) return "green";
     }
   }
 };
 </script>
-
-<style>
-</style>
