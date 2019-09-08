@@ -68,7 +68,7 @@
       <v-icon size="20px" @click="callProveedor(item)">mdi-phone</v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <v-btn color="primary" @click="fetchAllProductos">Reset</v-btn>
     </template>
   </v-data-table>
 </template>
@@ -78,11 +78,15 @@
 import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
 // Repositories
 const ProductosRepository = RepositoryFactory.get("productos");
+const CategoriasRepository = RepositoryFactory.get("categorias");
+const ProveedoresRepository = RepositoryFactory.get("proveedores");
 
 export default {
   data: () => ({
     dialog: false,
     productos: [],
+    categorias: [],
+    proveedores: [],
     editedIndex: -1,
     editedItem: {
       pr_nombre: "",
@@ -194,22 +198,39 @@ export default {
 
   watch: {
     dialog(val) {
+      if (val) {
+        // Dialog is opened
+        this.fetchAllCategorias();
+        this.fetchAllProveedores();
+      }
+
       val || this.close();
     }
   },
 
   created() {
-    this.initialize();
+    this.fetchAllProductos();
   },
 
   methods: {
-    async initialize() {
+    async fetchAllProductos() {
       this.isLoading = true;
       const { data } = await ProductosRepository.get();
       this.isLoading = false;
       this.productos = data;
     },
-
+    async fetchAllCategorias() {
+      this.isLoading = true;
+      const { data } = await CategoriasRepository.get();
+      this.isLoading = false;
+      this.categorias = data;
+    },
+    async fetchAllProveedores() {
+      this.isLoading = true;
+      const { data } = await ProveedoresRepository.get();
+      this.isLoading = false;
+      this.proveedores = data;
+    },
     editItem(item) {
       this.editedIndex = this.productos.indexOf(item);
       this.editedItem = Object.assign({}, item);
