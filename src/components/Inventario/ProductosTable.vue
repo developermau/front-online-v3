@@ -42,6 +42,20 @@
     <template v-slot:item.pr_stock="{ item }">
       <v-chip :color="getColor(item.pr_stock)" dark>{{ item.pr_stock }}</v-chip>
     </template>
+    <template v-slot:body.append>
+      <tr>
+        <td>
+          <v-text-field v-model="searchItem.pr_nombre" type="text" label="Contiene"></v-text-field>
+        </td>
+        <td>
+          <v-text-field v-model="searchItem.pr_marca" type="text" label="Contiene"></v-text-field>
+        </td>
+        <td>
+          <v-text-field v-model="searchItem.pr_stock" type="number" label="Menor que"></v-text-field>
+        </td>
+        <td colspan="2"></td>
+      </tr>
+    </template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -91,19 +105,31 @@ export default {
           text: "Nombre",
           align: "left",
           sortable: true,
-          value: "pr_nombre"
+          value: "pr_nombre",
+          filter: value => {
+            if (!this.searchItem.pr_nombre) return true;
+            return value.includes(this.searchItem.pr_nombre);
+          }
         },
         {
           text: "Marca",
           align: "left",
           sortable: true,
-          value: "pr_marca"
+          value: "pr_marca",
+          filter: value => {
+            if (!this.searchItem.pr_marca) return true;
+            return value.includes(this.searchItem.pr_marca);
+          }
         },
         {
           text: "Stock",
           align: "left",
           sortable: true,
-          value: "pr_stock"
+          value: "pr_stock",
+          filter: value => {
+            if (!this.searchItem.pr_stock) return true;
+            return value < parseInt(this.searchItem.pr_stock);
+          }
         },
         { text: "Actions", value: "action", sortable: false }
       ];
