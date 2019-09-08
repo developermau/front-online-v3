@@ -42,7 +42,8 @@ export default {
         "mdi-laptop",
         "mdi-phone",
         "mdi-television-classic",
-        "mdi-magnify"
+        "mdi-magnify",
+        "mdi-camera-plus"
       ];
     }
   }
