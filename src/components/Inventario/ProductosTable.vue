@@ -5,6 +5,7 @@
         <v-toolbar-title>Lista de productos</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <div class="flex-grow-1"></div>
+        <!-- DIALOG: Item -->
         <v-dialog v-model="dialogItem" max-width="500px" persistent>
           <template v-slot:activator="{ on }">
             <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo Producto</v-btn>
@@ -91,6 +92,21 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- MODAL: Confirmation -->
+        <v-dialog dark color="error" v-model="dialogConfirm" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">Confirmación de eliminacion</v-card-title>
+            <v-card-text>
+              ¿Esta seguro de eliminar el producto
+              <b>{{editedItem.pr_nombre}}</b>?
+            </v-card-text>
+            <v-card-actions>
+              <div class="flex-grow-1"></div>
+              <v-btn color="error" dark @click="dialogConfirm = false">No</v-btn>
+              <v-btn color="success" dark @click="deleteItem(deletedItem)">Si</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-toolbar>
     </template>
     <template v-slot:item.pr_stock="{ item }">
@@ -118,7 +134,7 @@
     </template>
     <template v-slot:item.action="{ item }">
       <v-icon size="20px" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon size="20px" @click="deleteItem(item)">mdi-delete</v-icon>
+      <v-icon size="20px" @click="openModal(item)">mdi-delete</v-icon>
       <v-icon size="20px" @click="callProveedor(item)">mdi-phone</v-icon>
     </template>
     <template v-slot:no-data>
@@ -138,6 +154,7 @@ const ProveedoresRepository = RepositoryFactory.get("proveedores");
 export default {
   data: () => ({
     dialogItem: false,
+    dialogConfirm: false,
     productos: [],
     categorias: [],
     proveedores: [],
@@ -147,6 +164,16 @@ export default {
       proveedor: {}
     },
     editedItem: {
+      pr_nombre: "",
+      pr_marca: "",
+      pr_stock: 0,
+      pr_precio_bs: 0,
+      pr_precio_envio_bs: 0,
+      pr_year: new Date().getFullYear(),
+      ca_categoria: 0,
+      pr_proveedor: 0
+    },
+    deletedItem: {
       pr_nombre: "",
       pr_marca: "",
       pr_stock: 0,
@@ -288,11 +315,9 @@ export default {
     },
     async save() {
       if (this.editedIndex > -1) {
+        console.log("actualizar");
         Object.assign(this.productos[this.editedIndex], this.editedItem);
       } else {
-        console.log("this.editedItem", this.editedItem);
-        console.log("this.selected.categoria", this.selected.categoria);
-        console.log("this.selected.proveedor", this.selected.proveedor);
         this.isLoading = true;
 
         this.editedItem.ca_categoria = this.selected.categoria.ca_categoria;
@@ -316,6 +341,8 @@ export default {
           console.log("productoNuevo", productoNuevo);
           this.productos.push(productoNuevo);
           this.close();
+
+          this.selected = { categoria: {}, proveedor: {} };
         } catch (error) {
           console.log("No se pudo guardar en la BD", error);
         }
@@ -323,20 +350,33 @@ export default {
         this.isLoading = false;
       }
     },
-
     editItem(item) {
       this.editedIndex = this.productos.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogItem = true;
     },
 
-    deleteItem(item) {
+    async deleteItem(item) {
+      console.log("delete...", item);
       const index = this.productos.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
+
+      try {
+        const { data } = await ProductosRepository.deleteProducto(
+          item.pr_producto
+        );
         this.productos.splice(index, 1);
+        this.dialogConfirm = false;
+      } catch (error) {
+        console.log("Ocurrio un error", error);
+      }
     },
     callProveedor(item) {
       console.log("calling...", item);
+    },
+    openModal(item) {
+      console.log('item', item);
+      this.dialogConfirm = true;
+      this.deletedItem = Object.assign({}, item);
     },
     close() {
       this.dialogItem = false;
