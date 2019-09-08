@@ -18,19 +18,13 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_nombre" label="Dessert name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_marca" label="Calories"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_stock" label="Carbs (g)"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -61,32 +55,36 @@ export default {
     dialog: false,
     headers: [
       {
-        text: "Dessert (100g serving)",
+        text: "Nombre",
         align: "left",
-        sortable: false,
-        value: "name"
+        sortable: true,
+        value: "pr_nombre"
       },
-      { text: "Calories", value: "calories" },
-      { text: "Fat (g)", value: "fat" },
-      { text: "Carbs (g)", value: "carbs" },
-      { text: "Protein (g)", value: "protein" },
+      {
+        text: "Marca",
+        align: "left",
+        sortable: true,
+        value: "pr_marca"
+      },
+      {
+        text: "Stock",
+        align: "left",
+        sortable: true,
+        value: "pr_stock"
+      },
       { text: "Actions", value: "action", sortable: false }
     ],
     productos: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      pr_nombre: "",
+      pr_marca: "",
+      pr_stock: 0
     },
     defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      pr_nombre: "",
+      pr_marca: "",
+      pr_stock: 0
     },
     searchItem: {
       pr_nombre: "",
@@ -115,74 +113,24 @@ export default {
     initialize() {
       this.productos = [
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0
+          pr_nombre: "a",
+          pr_marca: "x",
+          pr_stock: 24
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3
+          pr_nombre: "Frozen Yogurt",
+          pr_marca: "x",
+          pr_stock: 24
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0
+          pr_nombre: "b",
+          pr_marca: "x",
+          pr_stock: 24
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7
+          pr_nombre: "c",
+          pr_marca: "x",
+          pr_stock: 24
         }
       ];
     },
