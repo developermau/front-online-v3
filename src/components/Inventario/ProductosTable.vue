@@ -39,6 +39,9 @@
         </v-dialog>
       </v-toolbar>
     </template>
+    <template v-slot:item.pr_stock="{ item }">
+      <v-chip :color="getColor(item.pr_stock)" dark>{{ item.pr_stock }}</v-chip>
+    </template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -150,6 +153,11 @@ export default {
         this.productos.push(this.editedItem);
       }
       this.close();
+    },
+    getColor(pr_stock) {
+      if (pr_stock < 10) return "red";
+      else if (pr_stock >= 10 && pr_stock <= 20) return "orange";
+      else if (pr_stock > 20) return "green";
     }
   }
 };
