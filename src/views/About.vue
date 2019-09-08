@@ -40,7 +40,7 @@ export default {
         "mdi-email",
         "mdi-cellphone",
         "mdi-laptop",
-        "mdi-laptop",
+        "mdi-phone",
         "mdi-television-classic",
         "mdi-magnify"
       ];
