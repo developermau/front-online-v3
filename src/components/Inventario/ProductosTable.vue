@@ -50,6 +50,11 @@
 </template>
 
 <script>
+// Repository Factory
+import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
+// Repositories
+const ProductosRepository = RepositoryFactory.get("productos");
+
 export default {
   data: () => ({
     dialog: false,
@@ -90,7 +95,8 @@ export default {
       pr_nombre: "",
       pr_marca: "",
       pr_stock: 0
-    }
+    },
+    isLoading: false
   }),
 
   computed: {
@@ -110,29 +116,11 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.productos = [
-        {
-          pr_nombre: "a",
-          pr_marca: "x",
-          pr_stock: 24
-        },
-        {
-          pr_nombre: "Frozen Yogurt",
-          pr_marca: "x",
-          pr_stock: 24
-        },
-        {
-          pr_nombre: "b",
-          pr_marca: "x",
-          pr_stock: 24
-        },
-        {
-          pr_nombre: "c",
-          pr_marca: "x",
-          pr_stock: 24
-        }
-      ];
+    async initialize() {
+      this.isLoading = true;
+      const { data } = await ProductosRepository.get();
+      this.isLoading = false;
+      this.productos = data;
     },
 
     editItem(item) {
