@@ -148,6 +148,7 @@
       </tr>
     </template>
     <template v-slot:item.action="{ item }">
+      <v-icon size="20px" @click="showProduct(item)">mdi-eye</v-icon>
       <v-icon size="20px" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon size="20px" @click="openModal(item)">mdi-delete</v-icon>
       <v-icon size="20px" @click="callProveedor(item)">mdi-phone</v-icon>
@@ -448,6 +449,11 @@ export default {
       if (pr_stock < 10) return "red";
       else if (pr_stock >= 10 && pr_stock <= 20) return "orange";
       else if (pr_stock > 20) return "green";
+    },
+    showProduct(item) {
+      // -> /producto/123
+      const productoId = item.pr_producto;
+      this.$router.push({ name: "producto", params: { id: productoId } });
     }
   }
 };
