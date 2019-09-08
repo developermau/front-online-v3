@@ -17,7 +17,7 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6">
                     <v-select
                       v-model="editedItem.categoria"
                       :items="categorias"
@@ -29,7 +29,7 @@
                       single-line
                     ></v-select>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6">
                     <v-select
                       v-model="editedItem.proveedor"
                       :items="proveedores"
@@ -41,13 +41,13 @@
                       single-line
                     ></v-select>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12">
                     <v-text-field v-model="editedItem.pr_nombre" label="Nombre"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6">
                     <v-text-field v-model="editedItem.pr_marca" label="Marca"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6">
                     <v-text-field v-model="editedItem.pr_stock" label="Stock" type="number"></v-text-field>
                   </v-col>
                 </v-row>
@@ -56,8 +56,8 @@
 
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
