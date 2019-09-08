@@ -2,12 +2,12 @@
   <v-data-table :headers="headers" :items="productos" sort-by="calories" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title>My CRUD</v-toolbar-title>
+        <v-toolbar-title>Lista de productos</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <div class="flex-grow-1"></div>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+            <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo Producto</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -18,13 +18,13 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.pr_nombre" label="Dessert name"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_nombre" label="Nombre"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.pr_marca" label="Calories"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_marca" label="Marca"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.pr_stock" label="Carbs (g)"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_stock" label="Stock" type="number"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -97,7 +97,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Nuevo Producto" : "Actualizar Producto";
     },
     headers() {
       return [
