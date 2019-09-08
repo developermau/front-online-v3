@@ -17,6 +17,18 @@
             <v-card-text>
               <v-container>
                 <v-row>
+                  <v-col>
+                    <v-select
+                      v-model="editedItem.categoria"
+                      :items="categorias"
+                      item-text="ca_nombre"
+                      item-value="ca_categoria"
+                      label="Categorias"
+                      persistent-hint
+                      return-object
+                      single-line
+                    ></v-select>
+                  </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.pr_nombre" label="Nombre"></v-text-field>
                   </v-col>
