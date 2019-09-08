@@ -17,13 +17,25 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col>
+                  <v-col cols="12" sm="6" md="4">
                     <v-select
                       v-model="editedItem.categoria"
                       :items="categorias"
                       item-text="ca_nombre"
                       item-value="ca_categoria"
                       label="Categorias"
+                      persistent-hint
+                      return-object
+                      single-line
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-select
+                      v-model="editedItem.proveedor"
+                      :items="proveedores"
+                      item-text="pr_nombre"
+                      item-value="pr_proveedor"
+                      label="Proveedores"
                       persistent-hint
                       return-object
                       single-line
