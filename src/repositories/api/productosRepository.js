@@ -12,5 +12,9 @@ export default {
 
   createProducto(payload) {
     return Repository.post(`${resource}`, payload);
-  }
+  },
+
+  deleteProducto(productoId) {
+    return Repository.delete(`${resource}/${productoId}`);
+  },
 };
