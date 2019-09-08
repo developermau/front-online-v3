@@ -46,14 +46,6 @@
                   <v-col cols="12">
                     <v-text-field v-model="editedItem.pr_nombre" label="Nombre" required></v-text-field>
                   </v-col>
-                  <v-col cols="12">
-                    <v-textarea
-                      name="input-7-1"
-                      label="Descripcion"
-                      v-model="editedItem.pr_descripcion"
-                      required
-                    ></v-textarea>
-                  </v-col>
                   <v-col cols="12" sm="6">
                     <v-text-field
                       v-model="editedItem.pr_stock"
@@ -81,13 +73,21 @@
                       required
                     ></v-text-field>
                   </v-col>
+                  <v-col cols="12">
+                    <v-textarea
+                      name="input-7-1"
+                      label="Descripcion"
+                      v-model="editedItem.pr_descripcion"
+                      required
+                    ></v-textarea>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
 
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="closeDialogItem">Cancelar</v-btn>
               <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
             </v-card-actions>
           </v-card>
@@ -286,7 +286,7 @@ export default {
         this.fetchAllProveedores();
       }
 
-      val || this.close();
+      val || this.closeDialogItem();
     }
   },
 
@@ -313,49 +313,25 @@ export default {
       this.isLoading = false;
       this.proveedores = data;
     },
-    async save() {
-      if (this.editedIndex > -1) {
-        console.log("actualizar");
-        Object.assign(this.productos[this.editedIndex], this.editedItem);
-      } else {
-        this.isLoading = true;
+    async saveItemDB(item) {
+      const itemProducto = { ...item };
 
-        this.editedItem.ca_categoria = this.selected.categoria.ca_categoria;
-        this.editedItem.pr_proveedor = this.selected.proveedor.pr_proveedor;
+      itemProducto.ca_categoria = this.selected.categoria.ca_categoria;
+      itemProducto.pr_proveedor = this.selected.proveedor.pr_proveedor;
 
-        try {
-          const { data } = await ProductosRepository.createProducto(
-            this.editedItem
-          );
-
-          // Build product
-          const productoNuevo = { ...data.data };
-
-          productoNuevo.categoria = {
-            ca_nombre: this.selected.categoria.ca_nombre
-          };
-          productoNuevo.proveedor = {
-            pr_nombre: this.selected.proveedor.pr_nombre
-          };
-
-          console.log("productoNuevo", productoNuevo);
-          this.productos.push(productoNuevo);
-          this.close();
-
-          this.selected = { categoria: {}, proveedor: {} };
-        } catch (error) {
-          console.log("No se pudo guardar en la BD", error);
-        }
-
-        this.isLoading = false;
-      }
+      const { data } = await ProductosRepository.createProducto(itemProducto);
+      // Build product
+      const productoNuevo = { ...data.data };
+      productoNuevo.categoria = {
+        ca_nombre: this.selected.categoria.ca_nombre
+      };
+      productoNuevo.proveedor = {
+        pr_nombre: this.selected.proveedor.pr_nombre
+      };
+      console.log("productoNuevo", productoNuevo);
+      this.productos.push(productoNuevo);
+      this.selected = { categoria: {}, proveedor: {} };
     },
-    editItem(item) {
-      this.editedIndex = this.productos.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogItem = true;
-    },
-
     async deleteItem(item) {
       console.log("delete...", item);
       const index = this.productos.indexOf(item);
@@ -370,15 +346,79 @@ export default {
         console.log("Ocurrio un error", error);
       }
     },
+    async updateItemDB(indexTable, id, payload) {
+      try {
+        const itemProducto = { ...payload };
+
+        itemProducto.ca_categoria = this.selected.categoria.ca_categoria;
+        itemProducto.pr_proveedor = this.selected.proveedor.pr_proveedor;
+
+        const { data } = await ProductosRepository.updateProducto(
+          itemProducto.pr_producto,
+          itemProducto
+        );
+
+        console.log("data", data);
+
+        if (data.data.rowsUpdated > 0) {
+          // Build product
+          const productoUpdated = { ...itemProducto };
+          productoUpdated.categoria = {
+            ca_nombre: this.selected.categoria.ca_nombre
+          };
+          productoUpdated.proveedor = {
+            pr_nombre: this.selected.proveedor.pr_nombre
+          };
+          console.log("productoUpdated", productoUpdated);
+          // update tabla
+          Object.assign(this.productos[indexTable], this.editedItem);
+        } else {
+          console.error("No se pudo actualizar el registro");
+        }
+
+        this.selected = { categoria: {}, proveedor: {} };
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    save() {
+      if (this.editedIndex > -1) {
+        this.isLoading = true;
+        this.updateItemDB(
+          this.editedIndex,
+          this.editedItem.pr_producto,
+          this.editedItem
+        );
+        this.isLoading = false;
+      } else {
+        this.isLoading = true;
+        // Save
+        this.saveItemDB(this.editedItem);
+        this.isLoading = false;
+      }
+      this.closeDialogItem();
+    },
+    editItem(item) {
+      console.log("editItem", item);
+      this.editedIndex = this.productos.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.selected.categoria = {
+        ca_categoria: item.ca_categoria
+      };
+      this.selected.proveedor = {
+        pr_proveedor: item.pr_proveedor
+      };
+      this.dialogItem = true;
+    },
     callProveedor(item) {
       console.log("calling...", item);
     },
     openModal(item) {
-      console.log('item', item);
+      console.log("item", item);
       this.dialogConfirm = true;
       this.deletedItem = Object.assign({}, item);
     },
-    close() {
+    closeDialogItem() {
       this.dialogItem = false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
