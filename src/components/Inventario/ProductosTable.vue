@@ -107,6 +107,21 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- MODAL: Proveedor -->
+        <v-dialog dark color="warning" v-model="dialogCallProveedor" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">Contactarse con el proveedor</v-card-title>
+            <v-card-text>
+              Llamar al
+              <b>{{proveedorByItem.pr_telefono}}</b>
+              por pedidos
+            </v-card-text>
+            <v-card-actions>
+              <div class="flex-grow-1"></div>
+              <v-btn color="error" dark @click="dialogCallProveedor = false">Cerrar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-toolbar>
     </template>
     <template v-slot:item.pr_stock="{ item }">
@@ -155,6 +170,7 @@ export default {
   data: () => ({
     dialogItem: false,
     dialogConfirm: false,
+    dialogCallProveedor: false,
     productos: [],
     categorias: [],
     proveedores: [],
@@ -209,6 +225,7 @@ export default {
         pr_nombre: ""
       }
     },
+    proveedorByItem: {},
     isLoading: false
   }),
 
@@ -412,6 +429,8 @@ export default {
     },
     callProveedor(item) {
       console.log("calling...", item);
+      this.proveedorByItem = item.proveedor;
+      this.dialogCallProveedor = true;
     },
     openModal(item) {
       console.log("item", item);
