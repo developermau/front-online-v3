@@ -45,6 +45,9 @@
     <template v-slot:body.append>
       <tr>
         <td>
+          <v-text-field v-model="searchItem.categoria.ca_nombre" type="text" label="Contiene"></v-text-field>
+        </td>
+        <td>
           <v-text-field v-model="searchItem.pr_nombre" type="text" label="Contiene"></v-text-field>
         </td>
         <td>
@@ -80,17 +83,29 @@ export default {
     editedItem: {
       pr_nombre: "",
       pr_marca: "",
-      pr_stock: 0
+      pr_stock: 0,
+      categoria: {
+        ca_categoria: 0,
+        ca_nombre: ""
+      }
     },
     defaultItem: {
       pr_nombre: "",
       pr_marca: "",
-      pr_stock: 0
+      pr_stock: 0,
+      categoria: {
+        ca_categoria: 0,
+        ca_nombre: ""
+      }
     },
     searchItem: {
       pr_nombre: "",
       pr_marca: "",
-      pr_stock: 0
+      pr_stock: 0,
+      categoria: {
+        ca_categoria: 0,
+        ca_nombre: ""
+      }
     },
     isLoading: false
   }),
@@ -101,6 +116,16 @@ export default {
     },
     headers() {
       return [
+        {
+          text: "Categoria",
+          align: "left",
+          sortable: true,
+          value: "categoria.ca_nombre",
+          filter: value => {
+            if (!this.searchItem.categoria.ca_nombre) return true;
+            return value.includes(this.searchItem.categoria.ca_nombre);
+          }
+        },
         {
           text: "Nombre",
           align: "left",
