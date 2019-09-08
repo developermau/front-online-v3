@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
+  <v-data-table :headers="headers" :items="productos" sort-by="calories" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>My CRUD</v-toolbar-title>
@@ -72,7 +72,7 @@ export default {
       { text: "Protein (g)", value: "protein" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    desserts: [],
+    productos: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -108,7 +108,7 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
+      this.productos = [
         {
           name: "Frozen Yogurt",
           calories: 159,
@@ -183,15 +183,15 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.productos.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
+      const index = this.productos.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
-        this.desserts.splice(index, 1);
+        this.productos.splice(index, 1);
     },
 
     close() {
@@ -204,9 +204,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        Object.assign(this.productos[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.productos.push(this.editedItem);
       }
       this.close();
     }
