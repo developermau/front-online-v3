@@ -61,27 +61,6 @@ const ProductosRepository = RepositoryFactory.get("productos");
 export default {
   data: () => ({
     dialog: false,
-    headers: [
-      {
-        text: "Nombre",
-        align: "left",
-        sortable: true,
-        value: "pr_nombre"
-      },
-      {
-        text: "Marca",
-        align: "left",
-        sortable: true,
-        value: "pr_marca"
-      },
-      {
-        text: "Stock",
-        align: "left",
-        sortable: true,
-        value: "pr_stock"
-      },
-      { text: "Actions", value: "action", sortable: false }
-    ],
     productos: [],
     editedIndex: -1,
     editedItem: {
@@ -105,6 +84,29 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
+    },
+    headers() {
+      return [
+        {
+          text: "Nombre",
+          align: "left",
+          sortable: true,
+          value: "pr_nombre"
+        },
+        {
+          text: "Marca",
+          align: "left",
+          sortable: true,
+          value: "pr_marca"
+        },
+        {
+          text: "Stock",
+          align: "left",
+          sortable: true,
+          value: "pr_stock"
+        },
+        { text: "Actions", value: "action", sortable: false }
+      ];
     }
   },
 
