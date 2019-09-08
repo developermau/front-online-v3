@@ -87,6 +87,11 @@ export default {
       fat: 0,
       carbs: 0,
       protein: 0
+    },
+    searchItem: {
+      pr_nombre: "",
+      pr_marca: "",
+      pr_stock: 0
     }
   }),
 
