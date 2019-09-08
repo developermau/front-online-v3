@@ -5,7 +5,7 @@
         <v-toolbar-title>Lista de productos</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <div class="flex-grow-1"></div>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialogItem" max-width="500px" persistent>
           <template v-slot:activator="{ on }">
             <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo Producto</v-btn>
           </template>
@@ -19,36 +19,66 @@
                 <v-row>
                   <v-col cols="12" sm="6">
                     <v-select
-                      v-model="editedItem.categoria"
+                      v-model="selected.categoria"
                       :items="categorias"
                       item-text="ca_nombre"
                       item-value="ca_categoria"
                       label="Categorias"
-                      persistent-hint
                       return-object
-                      single-line
+                      required
                     ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-select
-                      v-model="editedItem.proveedor"
+                      v-model="selected.proveedor"
                       :items="proveedores"
                       item-text="pr_nombre"
                       item-value="pr_proveedor"
                       label="Proveedores"
-                      persistent-hint
                       return-object
-                      single-line
+                      required
                     ></v-select>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field v-model="editedItem.pr_nombre" label="Nombre"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_marca" label="Marca" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field v-model="editedItem.pr_nombre" label="Nombre" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea
+                      name="input-7-1"
+                      label="Descripcion"
+                      v-model="editedItem.pr_descripcion"
+                      required
+                    ></v-textarea>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.pr_marca" label="Marca"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.pr_stock"
+                      label="Stock"
+                      type="number"
+                      required
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field v-model="editedItem.pr_stock" label="Stock" type="number"></v-text-field>
+                    <v-text-field v-model="editedItem.pr_year" label="Año" type="number" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-text-field
+                      v-model="editedItem.pr_precio_bs"
+                      label="Precio (en Bs.)"
+                      type="number"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-text-field
+                      v-model="editedItem.pr_precio_envio_bs"
+                      label="Precio envio (en Bs.)"
+                      type="number"
+                      required
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -107,41 +137,42 @@ const ProveedoresRepository = RepositoryFactory.get("proveedores");
 
 export default {
   data: () => ({
-    dialog: false,
+    dialogItem: false,
     productos: [],
     categorias: [],
     proveedores: [],
     editedIndex: -1,
+    selected: {
+      categoria: {},
+      proveedor: {}
+    },
     editedItem: {
       pr_nombre: "",
       pr_marca: "",
       pr_stock: 0,
-      categoria: {
-        ca_categoria: 0,
-        ca_nombre: ""
-      },
-      proveedor: {
-        pr_proveedor: 0,
-        pr_nombre: ""
-      }
+      pr_precio_bs: 0,
+      pr_precio_envio_bs: 0,
+      pr_year: new Date().getFullYear(),
+      ca_categoria: 0,
+      pr_proveedor: 0
     },
     defaultItem: {
       pr_nombre: "",
       pr_marca: "",
       pr_stock: 0,
-      categoria: {
-        ca_categoria: 0,
-        ca_nombre: ""
-      },
-      proveedor: {
-        pr_proveedor: 0,
-        pr_nombre: ""
-      }
+      pr_precio_bs: 0,
+      pr_precio_envio_bs: 0,
+      pr_year: new Date().getFullYear(),
+      ca_categoria: 0,
+      pr_proveedor: 0
     },
     searchItem: {
       pr_nombre: "",
       pr_marca: "",
       pr_stock: 0,
+      pr_precio_bs: 0,
+      pr_precio_envio_bs: 0,
+      pr_year: new Date().getFullYear(),
       categoria: {
         ca_categoria: 0,
         ca_nombre: ""
@@ -221,7 +252,7 @@ export default {
   },
 
   watch: {
-    dialog(val) {
+    dialogItem(val) {
       if (val) {
         // Dialog is opened
         this.fetchAllCategorias();
@@ -255,10 +286,48 @@ export default {
       this.isLoading = false;
       this.proveedores = data;
     },
+    async save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.productos[this.editedIndex], this.editedItem);
+      } else {
+        console.log("this.editedItem", this.editedItem);
+        console.log("this.selected.categoria", this.selected.categoria);
+        console.log("this.selected.proveedor", this.selected.proveedor);
+        this.isLoading = true;
+
+        this.editedItem.ca_categoria = this.selected.categoria.ca_categoria;
+        this.editedItem.pr_proveedor = this.selected.proveedor.pr_proveedor;
+
+        try {
+          const { data } = await ProductosRepository.createProducto(
+            this.editedItem
+          );
+
+          // Build product
+          const productoNuevo = { ...data.data };
+
+          productoNuevo.categoria = {
+            ca_nombre: this.selected.categoria.ca_nombre
+          };
+          productoNuevo.proveedor = {
+            pr_nombre: this.selected.proveedor.pr_nombre
+          };
+
+          console.log("productoNuevo", productoNuevo);
+          this.productos.push(productoNuevo);
+          this.close();
+        } catch (error) {
+          console.log("No se pudo guardar en la BD", error);
+        }
+
+        this.isLoading = false;
+      }
+    },
+
     editItem(item) {
       this.editedIndex = this.productos.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.dialogItem = true;
     },
 
     deleteItem(item) {
@@ -270,20 +339,11 @@ export default {
       console.log("calling...", item);
     },
     close() {
-      this.dialog = false;
+      this.dialogItem = false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       }, 300);
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.productos[this.editedIndex], this.editedItem);
-      } else {
-        this.productos.push(this.editedItem);
-      }
-      this.close();
     },
     getColor(pr_stock) {
       if (pr_stock < 10) return "red";
