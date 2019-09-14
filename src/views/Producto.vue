@@ -78,6 +78,7 @@ import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
 // Repositories
 const ProductosRepository = RepositoryFactory.get("productos");
+const UploadsRepository = RepositoryFactory.get("uploads");
 
 export default {
   props: ["id"],
