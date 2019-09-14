@@ -107,7 +107,7 @@ export default {
     },
     async uploadFilesAsFormDataToServer(formData) {
       const section = "fotografias";
-      const { data } = await UploadsRepository.uploadFile(section, formData);
+      const { data } = await UploadsRepository.uploadFile(formData);
   
       console.log(data);
   
