@@ -76,6 +76,11 @@ export default {
       fotografias: []
     };
   },
+  watch: {
+    producto: function (newProducto, oldProducto) {
+      console.log(this.hasFotografias);
+    }
+  },
   async beforeRouteEnter(to, from, next) {
     const { data } = await ProductosRepository.getProducto(to.params.id);
     next(vm => (vm.producto = data.data));
@@ -112,9 +117,8 @@ export default {
         pr_producto,
         formData
       );
-
-      console.log(data);
-
+      const fotografias = data.fotografias;
+      this.producto.fotografias = fotografias;
       // Close Dialog
       this.dialogFotografia = false;
     }
