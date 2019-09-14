@@ -63,7 +63,7 @@ import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
 // Repositories
 const ProductosRepository = RepositoryFactory.get("productos");
-const UploadsRepository = RepositoryFactory.get("uploads");
+const FotografiasUploadsRepository = RepositoryFactory.get("uploadFotografias");
 
 export default {
   props: ["id"],
@@ -107,10 +107,13 @@ export default {
     },
     async uploadFilesAsFormDataToServer(formData) {
       const section = "fotografias";
-      const { data } = await UploadsRepository.uploadFile(formData);
-  
+      const pr_producto = this.id;
+      const { data } = await FotografiasUploadsRepository.uploadFileByProducto(
+        pr_producto,
+        formData
+      );
+
       console.log(data);
-  
 
       // Close Dialog
       this.dialogFotografia = false;
