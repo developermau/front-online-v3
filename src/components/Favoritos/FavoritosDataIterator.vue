@@ -46,7 +46,7 @@
 
       <template v-slot:default="props">
         <v-row>
-          <v-col v-for="item in props.items" :key="item.nombre" cols="12" sm="6" md="4" lg="3">
+          <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4" lg="3">
             <v-card>
               <v-card-title class="subheading font-weight-bold">{{ item.nombre }}</v-card-title>
 
@@ -72,7 +72,7 @@
                 <v-spacer></v-spacer>
                 <v-icon color="primary accent-4" @click="addToCart(item.id)">mdi-cart</v-icon>
                 <v-spacer></v-spacer>
-                <v-icon color="primary accent-4" @click="addToFavorites(item.id)">mdi-heart</v-icon>
+                <v-icon color="primary accent-4" @click="removeToFavorites(item.id)">mdi-delete</v-icon>
                 <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>
