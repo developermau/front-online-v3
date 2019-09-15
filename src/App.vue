@@ -34,14 +34,32 @@
 </template>
 
 <script>
+// Repository Factory
+import { RepositoryFactory } from "./repositories/base/RepositoryFactory";
+// Repositories
+const RelGustaRepository = RepositoryFactory.get("gustas");
+
 export default {
   name: "App",
+  data() {
+    return { productosFavoritos: [] };
+  },
+  created() {
+    const userId = 2;
+    this.fetchProductosFavoritosByUser(userId);
+  },
   computed: {
     countProductsInCart: function() {
       return this.$store.getters["cart/countProductsInCart"];
     },
-    countProductsInFavorites: function() {
-      return 0;
+    countProductsInFavorites() {
+      return this.productosFavoritos.length;
+    }
+  },
+  methods: {
+    async fetchProductosFavoritosByUser(userId) {
+      const { data } = await RelGustaRepository.getRelationListByUser(userId);
+      this.productosFavoritos = data;
     }
   }
 };

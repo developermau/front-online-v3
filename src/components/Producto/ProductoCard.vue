@@ -55,7 +55,7 @@ export default {
       this.$store.dispatch("cart/addProductToCart", productInCart);
     },
     addToFavorites() {
-      console.log("Añadiendo a favoritos...", this.product);
+      console.log("Añadiendo a favoritos...", this.producto);
     }
   }
 };
