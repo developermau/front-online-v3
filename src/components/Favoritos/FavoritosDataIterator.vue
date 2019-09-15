@@ -58,7 +58,11 @@
                   :key="index"
                   :color="sortBy === key ? `blue lighten-4` : `white`"
                 >
-                  <v-list-item-content>{{ key }}:</v-list-item-content>
+                  <v-list-item-content
+                    v-if="key.toLowerCase()=='costo' 
+                    || key.toLowerCase()=='envio'"
+                  >{{ key }} (en Bs):</v-list-item-content>
+                  <v-list-item-content v-else>{{ key }}:</v-list-item-content>
                   <v-list-item-content class="align-end">{{ item[key.toLowerCase()] }}</v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -115,17 +119,7 @@ export default {
       page: 1,
       itemsPerPage: 3,
       sortBy: "name",
-      keys: [
-        "producto",
-        "nombre",
-        "descripcion",
-        "marca",
-        "precio_bs",
-        "precio_envio_bs",
-        "stock",
-        "year",
-        "estado"
-      ]
+      keys: ["Producto", "Nombre", "Marca", "Stock", "Año", "Costo", "Envio"]
     };
   },
   computed: {
