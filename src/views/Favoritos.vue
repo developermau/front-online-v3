@@ -2,7 +2,7 @@
   <v-container fluid>
     <h1 class="text-center">Favoritos</h1>
     <!-- <v-layout wrap> -->
-    <FavoritosTable :favoritos="favoriteProducts" />
+    <FavoritosDataIterator :favoritos="favoriteProducts" />
     <!-- </v-layout> -->
   </v-container>
 </template>
@@ -13,11 +13,11 @@ import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
 // Repositories
 const RelGustaRepository = RepositoryFactory.get("gustas");
 
-import FavoritosTable from "../components/Favoritos/FavoritosTable";
+import FavoritosDataIterator from "../components/Favoritos/FavoritosDataIterator";
 
 export default {
   name: "Favoritos",
-  components: { FavoritosTable },
+  components: { FavoritosDataIterator },
   data() {
     return {
       isLoading: false,
@@ -25,7 +25,8 @@ export default {
     };
   },
   created() {
-    this.fetchFavoriteProductsByUser(1);
+    const userId = 1;
+    this.fetchFavoriteProductsByUser(userId);
   },
   methods: {
     async fetchFavoriteProductsByUser(userId) {
