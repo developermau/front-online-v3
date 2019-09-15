@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-data-iterator
-      :items="favoritos"
+      :items="productos"
       :items-per-page.sync="itemsPerPage"
       :page="page"
       :search="search"
@@ -121,8 +121,11 @@
 import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
 // Repositories
 const RelGustaRepository = RepositoryFactory.get("gustas");
+// Repositories
+const CategoriasRepository = RepositoryFactory.get("categorias");
 
 export default {
+  props: ["categoriaId"],
   data() {
     return {
       itemsPerPageArray: [3, 6, 9],
@@ -133,28 +136,27 @@ export default {
       itemsPerPage: 3,
       sortBy: "name",
       keys: ["Nombre", "Marca", "Stock", "Año", "Costo", "Envio"],
-      favoritosDB: [],
-      favoriteProducts: []
+      productosByCategoryDB: [],
+      productosByCategory: []
     };
   },
   created() {
-    const userId = 2;
-    this.fetchFavoriteProductsByUser(userId);
+    this.fetchProductosByCategoria(this.categoriaId);
   },
   computed: {
     numberOfPages() {
-      return Math.ceil(this.favoritosDB.length / this.itemsPerPage);
+      return Math.ceil(this.productosByCategoryDB.length / this.itemsPerPage);
     },
     filteredKeys() {
       return this.keys.filter(key => key !== `Name`);
     },
-    favoritos() {
-      let favoritos = [];
+    productos() {
+      let productos = [];
 
-      this.favoritosDB.forEach(favoritoDB => {
-        favoritos.push(this.mapperProductDBToProductDataIterator(favoritoDB));
+      this.productosByCategoryDB.forEach(productoDB => {
+        productos.push(this.mapperProductDBToProductDataIterator(productoDB));
       });
-      return favoritos;
+      return productos;
     }
   },
   methods: {
@@ -167,22 +169,14 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
     },
-    async fetchFavoriteProductsByUser(userId) {
+    async fetchProductosByCategoria(categoriaId) {
       this.isLoading = true;
-      const { data } = await RelGustaRepository.getRelationListByUser(userId);
-
-      if (this.favoritosDB === null && this.favoritosDB === undefined) {
-        this.favoritosDB = [];
-      }
-
-      if (data !== null && data !== undefined) {
-        data.forEach(item => {
-          const producto = item.producto;
-          this.favoritosDB.push(producto);
-        });
-      }
-
+      const { data } = await CategoriasRepository.getProductosByCategoria(
+        categoriaId
+      );
+      console.log("productosByCategory", data.productos);
       this.isLoading = false;
+      this.productosByCategoryDB = data.productos;
     },
     showProduct(productoId) {
       this.$router.push({
@@ -193,7 +187,10 @@ export default {
       });
     },
     addToCart(productoId) {
-      const producto = this.filterProductoById(productoId, this.favoritosDB);
+      const producto = this.filterProductoById(
+        productoId,
+        this.productosByCategoryDB
+      );
 
       let productInCart = {
         ...producto,
@@ -203,10 +200,13 @@ export default {
       this.$store.dispatch("cart/addProductToCart", productInCart);
     },
     removeToFavorites(productoId) {
-      const producto = this.filterProductoById(productoId, this.favoritosDB);
+      const producto = this.filterProductoById(
+        productoId,
+        this.productosByCategoryDB
+      );
       // console.log("Eliminando de favoritos...", producto);
 
-      const index = this.favoritosDB.indexOf(producto);
+      const index = this.productosByCategoryDB.indexOf(producto);
 
       const usuarioId = 2;
 
@@ -222,7 +222,7 @@ export default {
       console.log("payload", payload);
       RelGustaRepository.deleteProducto(payload).then(rowsDeleted => {
         console.log("rowsDeleted", rowsDeleted);
-        this.favoritosDB.splice(index, 1);
+        this.productosByCategoryDB.splice(index, 1);
       });
     },
     filterProductoById(productoId, productos) {
