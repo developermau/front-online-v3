@@ -75,6 +75,8 @@ export default {
       const { data } = await RelGustaRepository.createRelation(newRelGusta);
       console.log("data", data);
 
+      // Vuex
+      this.$store.dispatch("favorite/addProductToFavoritos", this.producto);
     }
   }
 };
