@@ -46,7 +46,7 @@
 
       <template v-slot:default="props">
         <v-row>
-          <v-col v-for="item in props.items" :key="item.id" cols="12" sm="6" md="4" lg="3">
+          <v-col v-for="(item, index) in props.items" :key="index" cols="12" sm="6" md="4" lg="3">
             <v-card>
               <v-card-title class="subheading font-weight-bold">{{ item.nombre }}</v-card-title>
 
@@ -117,6 +117,11 @@
 </template>
 
 <script>
+// Repository Factory
+import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
+// Repositories
+const RelGustaRepository = RepositoryFactory.get("gustas");
+
 export default {
   props: ["favoritosDB"],
   data() {
@@ -158,7 +163,7 @@ export default {
       this.itemsPerPage = number;
     },
     showProduct(productoId) {
-        this.$router.push({ name: "producto", params: { id: productoId } });
+      this.$router.push({ name: "producto", params: { id: productoId } });
     },
     addToCart(productoId) {
       const producto = this.filterProductoById(productoId, this.favoritosDB);
@@ -170,9 +175,25 @@ export default {
       console.log("productInCart", productInCart);
       this.$store.dispatch("cart/addProductToCart", productInCart);
     },
-    addToFavorites(productoId) {
+    removeToFavorites(productoId) {
       const producto = this.filterProductoById(productoId, this.favoritosDB);
-      console.log("Añadiendo a favoritos...", producto);
+      console.log("Eliminando de favoritos...", producto);
+
+      const usuarioId = 2;
+
+      const payload = {
+        us_usuario: usuarioId,
+        pr_producto: productoId
+      };
+
+      this.removeRelacionGusta(payload);
+      this.$store.dispatch("favorite/removeProduct", producto);
+    },
+    removeRelacionGusta(payload) {
+      console.log("payload", payload);
+      RelGustaRepository.deleteProducto(payload).then(rowsDeleted => {
+        console.log("rowsDeleted", rowsDeleted);
+      });
     },
     filterProductoById(productoId, productos) {
       return productos.find(producto => {
