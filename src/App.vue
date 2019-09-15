@@ -53,7 +53,7 @@ export default {
       return this.$store.getters["cart/countProductsInCart"];
     },
     countProductsInFavorites() {
-      return this.productosFavoritos.length;
+      return this.$store.getters["favorite/countProductsInFavoritos"];
     }
   },
   methods: {
@@ -61,6 +61,16 @@ export default {
       console.log("fetchProductosFavoritosByUser....", userId);
       const { data } = await RelGustaRepository.getRelationListByUser(userId);
       this.productosFavoritos = data;
+
+      console.log("this.productosFavoritos", this.productosFavoritos);
+
+      for (let i = 0; i < this.productosFavoritos.length; i++) {
+        const productoFavorito = this.productosFavoritos[i];
+        this.$store.dispatch(
+          "favorite/addProductToFavoritos",
+          productoFavorito
+        );
+      }
     }
   }
 };
