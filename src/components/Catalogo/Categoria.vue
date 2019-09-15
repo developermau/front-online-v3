@@ -31,7 +31,7 @@ import ProductoCard from "../Producto/ProductoCard";
 // Repository Factory
 import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
 // Repositories
-const ProductosRepository = RepositoryFactory.get("productos");
+const CategoriasRepository = RepositoryFactory.get("categorias");
 
 export default {
   props: ["categoria"],
@@ -49,9 +49,10 @@ export default {
   methods: {
     async fetchProductosByCategoria(categoriaId) {
       this.isLoading = true;
-      const { data } = await ProductosRepository.get();
+      const { data } = await CategoriasRepository.getProductosByCategoria(categoriaId);
+      console.log('productosByCategory', data.productos);
       this.isLoading = false;
-      this.productosByCategory = data;
+      this.productosByCategory = data.productos;
     },
     verMasCategoria(categoriaId) {
       this.$router.push(`/categoria/${categoriaId}`);
