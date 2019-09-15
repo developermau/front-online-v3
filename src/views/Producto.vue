@@ -24,13 +24,8 @@
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
-          <!-- <v-card v-else dark>
-            <v-card-text class="text-center">
-              <v-icon size="200" color="primary" @click="addFotografia">mdi-camera-plus</v-icon>
-            </v-card-text>
-          </v-card>-->
-          <!-- DIALOG: Fotografia -->
-          <v-dialog v-model="dialogFotografia" max-width="500px" persistent>
+          <!-- DIALOG: Upload fotografias -->
+          <v-dialog v-model="dialogUploadFotografias" max-width="500px" persistent>
             <v-card>
               <v-card-title>
                 <span class="headline">Subir fotografias</span>
@@ -52,7 +47,7 @@
 
               <v-card-actions>
                 <div class="flex-grow-1"></div>
-                <v-btn color="error" @click="dialogFotografia = false">Cancelar</v-btn>
+                <v-btn color="error" @click="dialogUploadFotografias = false">Cancelar</v-btn>
                 <v-btn color="success" @click="prepararArchivos">Subir</v-btn>
               </v-card-actions>
             </v-card>
@@ -69,7 +64,9 @@
 <script>
 // Vue components
 import FotografiaCarrusel from "../components/Fotografia/FotografiaCarrusel";
+import FotografiaListItemGroup from "../components/Fotografia/FotografiaListItemGroup";
 import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
+
 // Repository Factory
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
 // Repositories
@@ -79,17 +76,20 @@ const FotografiasUploadsRepository = RepositoryFactory.get("uploadFotografias");
 export default {
   props: ["id"],
   name: "Producto",
-  components: { FotografiaCarrusel, ProductoCardDetails },
+  components: { FotografiaCarrusel, FotografiaListItemGroup, ProductoCardDetails },
   data: function() {
     return {
       producto: {},
-      dialogFotografia: false,
+      dialogUploadFotografias: false,
       fotografias: []
     };
   },
-  async beforeRouteEnter(to, from, next) {
-    const { data } = await ProductosRepository.getProducto(to.params.id);
-    next(vm => (vm.producto = data.data));
+  // async beforeRouteEnter(to, from, next) {
+  //   const { data } = await ProductosRepository.getProducto(to.params.id);
+  //   next(vm => (vm.producto = data.data));
+  // },
+  created(){
+    this.fetchProducto(this.id);
   },
   computed: {
     hasFotografias() {
@@ -105,9 +105,13 @@ export default {
     }
   },
   methods: {
+    async fetchProducto(productoId){
+      const { data } = await ProductosRepository.getProducto(productoId);
+      this.producto = data.data;
+    },
     openDialog() {
       this.fotografias = [];
-      this.dialogFotografia = true;
+      this.dialogUploadFotografias = true;
     },
     addFotografia() {
       console.log("Adicionando fotografias...para el producto", this.producto);
@@ -122,7 +126,7 @@ export default {
         });
         this.uploadFilesAsFormDataToServer(formData);
         // Close Dialog
-        this.dialogFotografia = false;
+        this.dialogUploadFotografias = false;
       }
     },
     async uploadFilesAsFormDataToServer(formData) {
