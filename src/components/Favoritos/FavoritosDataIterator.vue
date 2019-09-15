@@ -123,7 +123,6 @@ import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
 const RelGustaRepository = RepositoryFactory.get("gustas");
 
 export default {
-  props: ["favoritosDB"],
   data() {
     return {
       itemsPerPageArray: [3, 6, 9],
@@ -133,8 +132,14 @@ export default {
       page: 1,
       itemsPerPage: 3,
       sortBy: "name",
-      keys: ["Nombre", "Marca", "Stock", "Año", "Costo", "Envio"]
+      keys: ["Nombre", "Marca", "Stock", "Año", "Costo", "Envio"],
+      favoritosDB: [],
+      favoriteProducts: []
     };
+  },
+  created() {
+    const userId = 2;
+    this.fetchFavoriteProductsByUser(userId);
   },
   computed: {
     numberOfPages() {
@@ -162,8 +167,30 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
     },
+    async fetchFavoriteProductsByUser(userId) {
+      this.isLoading = true;
+      const { data } = await RelGustaRepository.getRelationListByUser(userId);
+
+      if (this.favoritosDB === null && this.favoritosDB === undefined) {
+        this.favoritosDB = [];
+      }
+
+      if (data !== null && data !== undefined) {
+        data.forEach(item => {
+          const producto = item.producto;
+          this.favoritosDB.push(producto);
+        });
+      }
+
+      this.isLoading = false;
+    },
     showProduct(productoId) {
-      this.$router.push({ name: "producto", params: { id: productoId } });
+      this.$router.push({
+        name: "producto",
+        params: {
+          id: productoId
+        }
+      });
     },
     addToCart(productoId) {
       const producto = this.filterProductoById(productoId, this.favoritosDB);
@@ -177,7 +204,9 @@ export default {
     },
     removeToFavorites(productoId) {
       const producto = this.filterProductoById(productoId, this.favoritosDB);
-      console.log("Eliminando de favoritos...", producto);
+      // console.log("Eliminando de favoritos...", producto);
+
+      const index = this.favoritosDB.indexOf(producto);
 
       const usuarioId = 2;
 
@@ -186,13 +215,14 @@ export default {
         pr_producto: productoId
       };
 
-      this.removeRelacionGusta(payload);
+      this.removeRelacionGusta(index, payload);
       this.$store.dispatch("favorite/removeProduct", producto);
     },
-    removeRelacionGusta(payload) {
+    removeRelacionGusta(index, payload) {
       console.log("payload", payload);
       RelGustaRepository.deleteProducto(payload).then(rowsDeleted => {
         console.log("rowsDeleted", rowsDeleted);
+        this.favoritosDB.splice(index, 1);
       });
     },
     filterProductoById(productoId, productos) {
