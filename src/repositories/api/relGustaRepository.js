@@ -12,5 +12,9 @@ export default {
 
   createRelation(payload) {
     return Repository.post(`${resource}`, payload);
+  },
+
+  deleteProducto(payload) {
+    return Repository.delete(`${resource}`, { data: payload });
   }
 };
