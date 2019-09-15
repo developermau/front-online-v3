@@ -122,7 +122,7 @@
           <v-card>
             <v-card-title>Opiniones</v-card-title>
             <v-card-text>
-              <OpinionesLista />
+              <OpinionesLista :opiniones="producto.opiniones" />
             </v-card-text>
           </v-card>
         </v-col>
