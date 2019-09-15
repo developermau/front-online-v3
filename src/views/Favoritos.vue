@@ -2,7 +2,7 @@
   <v-container fluid>
     <h1 class="text-center">Favoritos</h1>
     <!-- <v-layout wrap> -->
-    <FavoritosDataIterator :favoritos="favoriteProducts" />
+    <FavoritosDataIterator :favoritosDB="favoriteProducts" />
     <!-- </v-layout> -->
   </v-container>
 </template>
@@ -42,37 +42,12 @@ export default {
 
       if (data !== null && data !== undefined) {
         data.forEach(item => {
-          console.log(item);
-          console.log(item.producto);
-
           const producto = item.producto;
-
-          const productoConvertToDataIterator = this.convertProductoToDataIterator(
-            producto
-          );
-
-          this.favoriteProducts.push(productoConvertToDataIterator);
+          this.favoriteProducts.push(producto);
         });
       }
 
       this.isLoading = false;
-    },
-    convertProductoToDataIterator(producto) {
-      return {
-        producto: producto.pr_producto,
-        nombre: producto.pr_nombre,
-        descripcion: producto.pr_descripcion,
-        marca: producto.pr_marca,
-        costo: producto.pr_precio_bs,
-        envio: producto.pr_precio_envio_bs,
-        stock: producto.pr_stock,
-        año: producto.pr_year,
-        estado: producto.pr_estado,
-        categoria: producto.ca_categoria,
-        proveedor: producto.pr_proveedor,
-        createdAt: producto.createdAt,
-        updatedAt: producto.updatedAt
-      };
     }
   }
 };

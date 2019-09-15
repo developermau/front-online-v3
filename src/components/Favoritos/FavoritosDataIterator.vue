@@ -66,6 +66,15 @@
                   <v-list-item-content class="align-end">{{ item[key.toLowerCase()] }}</v-list-item-content>
                 </v-list-item>
               </v-list>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-icon color="primary accent-4" @click="showProduct(item.id)">mdi-eye</v-icon>
+                <v-spacer></v-spacer>
+                <v-icon color="primary accent-4" @click="addToCart(item.id)">mdi-cart</v-icon>
+                <v-spacer></v-spacer>
+                <v-icon color="primary accent-4" @click="addToFavorites(item.id)">mdi-heart</v-icon>
+                <v-spacer></v-spacer>
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -109,7 +118,7 @@
 
 <script>
 export default {
-  props: ["favoritos"],
+  props: ["favoritosDB"],
   data() {
     return {
       itemsPerPageArray: [3, 6, 9],
@@ -119,7 +128,7 @@ export default {
       page: 1,
       itemsPerPage: 3,
       sortBy: "name",
-      keys: ["Producto", "Nombre", "Marca", "Stock", "Año", "Costo", "Envio"]
+      keys: ["Nombre", "Marca", "Stock", "Año", "Costo", "Envio"]
     };
   },
   computed: {
@@ -128,6 +137,14 @@ export default {
     },
     filteredKeys() {
       return this.keys.filter(key => key !== `Name`);
+    },
+    favoritos() {
+      let favoritos = [];
+
+      this.favoritosDB.forEach(favoritoDB => {
+        favoritos.push(this.mapperProductDBToProductDataIterator(favoritoDB));
+      });
+      return favoritos;
     }
   },
   methods: {
@@ -139,6 +156,62 @@ export default {
     },
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
+    },
+    showProduct(productoId) {
+        this.$router.push({ name: "producto", params: { id: productoId } });
+    },
+    addToCart(productoId) {
+      const producto = this.filterProductoById(productoId, this.favoritosDB);
+
+      let productInCart = {
+        ...producto,
+        cantidad: 1
+      };
+      console.log("productInCart", productInCart);
+      this.$store.dispatch("cart/addProductToCart", productInCart);
+    },
+    addToFavorites(productoId) {
+      const producto = this.filterProductoById(productoId, this.favoritosDB);
+      console.log("Añadiendo a favoritos...", producto);
+    },
+    filterProductoById(productoId, productos) {
+      return productos.find(producto => {
+        return producto.pr_producto === productoId;
+      });
+    },
+    mapperProductDataIteratorToProductDB(producto) {
+      return {
+        pr_producto: producto.pr_producto,
+        pr_nombre: producto.pr_nombre,
+        pr_descripcion: producto.pr_descripcion,
+        pr_marca: producto.pr_marca,
+        pr_precio_bs: producto.pr_precio_bs,
+        pr_precio_envio_bs: producto.pr_precio_envio_bs,
+        pr_stock: producto.pr_stock,
+        pr_year: producto.pr_year,
+        pr_estado: producto.pr_estado,
+        ca_categoria: producto.ca_categoria,
+        pr_proveedor: producto.pr_proveedor,
+        createdAt: producto.createdAt,
+        updatedAt: producto.updatedAt
+      };
+    },
+    mapperProductDBToProductDataIterator(producto) {
+      return {
+        id: producto.pr_producto,
+        nombre: producto.pr_nombre,
+        descripcion: producto.pr_descripcion,
+        marca: producto.pr_marca,
+        costo: producto.pr_precio_bs,
+        envio: producto.pr_precio_envio_bs,
+        stock: producto.pr_stock,
+        año: producto.pr_year,
+        estado: producto.pr_estado,
+        categoria: producto.ca_categoria,
+        proveedor: producto.pr_proveedor,
+        createdAt: producto.createdAt,
+        updatedAt: producto.updatedAt
+      };
     }
   }
 };
