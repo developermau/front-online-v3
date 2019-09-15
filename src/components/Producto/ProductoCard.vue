@@ -37,6 +37,11 @@
 </template>
 
 <script>
+// Repository Factory
+import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
+// Repositories
+const RelGustaRepository = RepositoryFactory.get("gustas");
+
 export default {
   props: ["producto"],
   name: "ProductoCard",
@@ -54,8 +59,22 @@ export default {
       console.log("productInCart", productInCart);
       this.$store.dispatch("cart/addProductToCart", productInCart);
     },
-    addToFavorites() {
+    async addToFavorites() {
       console.log("Añadiendo a favoritos...", this.producto);
+
+      const usuarioId = 2;
+
+      const newRelGusta = {
+        us_usuario: usuarioId,
+        pr_producto: this.producto.pr_producto
+      };
+
+      console.log("newRelGusta", newRelGusta);
+
+      console.log("newRelGusta", newRelGusta);
+      const { data } = await RelGustaRepository.createRelation(newRelGusta);
+      console.log("data", data);
+
     }
   }
 };
