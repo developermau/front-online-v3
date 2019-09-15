@@ -160,6 +160,8 @@
 </template>
 
 <script>
+// Util
+import { fnHandlerError } from "../../util/handlersApi";
 // Repository Factory
 import { RepositoryFactory } from "../../repositories/base/RepositoryFactory";
 // Repositories
@@ -350,27 +352,31 @@ export default {
       this.productos.push(productoNuevo);
       this.selected = { categoria: {}, proveedor: {} };
     },
-    async deleteItem(item) {
-      console.log("delete...", item);
+    deleteItem(item) {
+      this.deleteItemDB(item);
+    },
+    async deleteItemDB(item) {
       const index = this.productos.indexOf(item);
 
       try {
-        const { data } = await ProductosRepository.deleteProducto(
-          item.pr_producto
-        );
+        await ProductosRepository.deleteProducto(item.pr_producto);
         this.productos.splice(index, 1);
         this.dialogConfirm = false;
-      } catch (error) {
-        console.log("Ocurrio un error", error);
+      } catch (errorBackend) {
+        const backendResponse = errorBackend.response;
+        const error = backendResponse.data;
+
+        let resError = fnHandlerError(error);
+        console.log(resError);
       }
     },
     async updateItemDB(indexTable, id, payload) {
+      const itemProducto = { ...payload };
+
+      itemProducto.ca_categoria = this.selected.categoria.ca_categoria;
+      itemProducto.pr_proveedor = this.selected.proveedor.pr_proveedor;
+
       try {
-        const itemProducto = { ...payload };
-
-        itemProducto.ca_categoria = this.selected.categoria.ca_categoria;
-        itemProducto.pr_proveedor = this.selected.proveedor.pr_proveedor;
-
         const { data } = await ProductosRepository.updateProducto(
           itemProducto.pr_producto,
           itemProducto
@@ -434,7 +440,6 @@ export default {
       this.dialogCallProveedor = true;
     },
     openModal(item) {
-      console.log("item", item);
       this.dialogConfirm = true;
       this.deletedItem = Object.assign({}, item);
     },
