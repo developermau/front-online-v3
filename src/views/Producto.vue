@@ -117,6 +117,16 @@
           <ProductoCardDetails :producto="producto" />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-card>
+            <v-card-title>Opiniones</v-card-title>
+            <v-card-text>
+              <OpinionesLista />
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </section>
 </template>
@@ -126,6 +136,7 @@
 import FotografiaCarrusel from "../components/Fotografia/FotografiaCarrusel";
 import FotografiaListItemGroup from "../components/Fotografia/FotografiaListItemGroup";
 import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
+import OpinionesLista from "../components/Opiniones/OpinionesLista";
 
 // Repository Factory
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
@@ -140,7 +151,8 @@ export default {
   components: {
     FotografiaCarrusel,
     FotografiaListItemGroup,
-    ProductoCardDetails
+    ProductoCardDetails,
+    OpinionesLista
   },
   data: function() {
     return {
