@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     async fetchProductosFavoritosByUser(userId) {
+      console.log("fetchProductosFavoritosByUser....", userId);
       const { data } = await RelGustaRepository.getRelationListByUser(userId);
       this.productosFavoritos = data;
     }
