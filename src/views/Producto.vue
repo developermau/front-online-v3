@@ -15,15 +15,75 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <div>
-                <v-btn block color="primary" dark @click="openDialog">Nueva Fotografia</v-btn>
+                <v-btn
+                  block
+                  color="primary"
+                  dark
+                  @click="openDialogUploadFotografias"
+                >Nueva Fotografia</v-btn>
               </div>
               <v-spacer></v-spacer>
               <div>
-                <v-btn block color="error" dark @click="openDialog">Eliminar Fotografias</v-btn>
+                <v-btn
+                  block
+                  color="error"
+                  dark
+                  @click="openDialogRemoveFotografias"
+                >Eliminar Fotografias</v-btn>
               </div>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
+          <!-- DIALOG: Remove fotografias -->
+          <v-dialog v-model="dialogRemoveFotografias" max-width="500px" persistent>
+            <v-card class="mx-auto" max-width="500">
+              <v-card-title>Lista de fotografias</v-card-title>
+              <v-list shaped>
+                <v-list-item-group v-model="fotografiasSelected" multiple>
+                  <template v-for="(item, i) in producto.fotografias">
+                    <v-divider v-if="!item" :key="`divider-${i}`"></v-divider>
+
+                    <v-list-item
+                      v-else
+                      :key="`item-${i}`"
+                      :value="item"
+                      active-class="deep-purple--text text--accent-4"
+                    >
+                      <template v-slot:default="{ active, toggle }">
+                        <v-avatar>
+                          <img size="10" :src="item.fo_ubicacion" alt="avatar" />
+                        </v-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title v-text="item.fo_title"></v-list-item-title>
+                        </v-list-item-content>
+
+                        <v-list-item-action>
+                          <v-checkbox
+                            :input-value="active"
+                            :true-value="item"
+                            color="deep-purple accent-4"
+                            @click="toggle"
+                          ></v-checkbox>
+                        </v-list-item-action>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-list-item-group>
+              </v-list>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <div>
+                  <v-btn small color="error" @click="eliminar">Eliminar</v-btn>
+                </div>
+                <v-spacer></v-spacer>
+                <div>
+                  <v-btn small color="danger" @click="close">Cancelar</v-btn>
+                </div>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <!-- DIALOG: Upload fotografias -->
           <v-dialog v-model="dialogUploadFotografias" max-width="500px" persistent>
             <v-card>
@@ -71,24 +131,31 @@ import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
 // Repositories
 const ProductosRepository = RepositoryFactory.get("productos");
+const FotografiasRepository = RepositoryFactory.get("fotografias");
 const FotografiasUploadsRepository = RepositoryFactory.get("uploadFotografias");
 
 export default {
   props: ["id"],
   name: "Producto",
-  components: { FotografiaCarrusel, FotografiaListItemGroup, ProductoCardDetails },
+  components: {
+    FotografiaCarrusel,
+    FotografiaListItemGroup,
+    ProductoCardDetails
+  },
   data: function() {
     return {
       producto: {},
       dialogUploadFotografias: false,
-      fotografias: []
+      dialogRemoveFotografias: false,
+      fotografias: [],
+      fotografiasSelected: []
     };
   },
   // async beforeRouteEnter(to, from, next) {
   //   const { data } = await ProductosRepository.getProducto(to.params.id);
   //   next(vm => (vm.producto = data.data));
   // },
-  created(){
+  created() {
     this.fetchProducto(this.id);
   },
   computed: {
@@ -105,13 +172,17 @@ export default {
     }
   },
   methods: {
-    async fetchProducto(productoId){
+    async fetchProducto(productoId) {
       const { data } = await ProductosRepository.getProducto(productoId);
       this.producto = data.data;
     },
-    openDialog() {
+    openDialogUploadFotografias() {
       this.fotografias = [];
       this.dialogUploadFotografias = true;
+    },
+    openDialogRemoveFotografias() {
+      this.fotografiasSelected = [];
+      this.dialogRemoveFotografias = true;
     },
     addFotografia() {
       console.log("Adicionando fotografias...para el producto", this.producto);
@@ -151,6 +222,28 @@ export default {
           this.producto.fotografias.push(fotografia);
         });
       }
+    },
+    eliminar() {
+      console.log("Eliminar fotografias...", this.fotografiasSelected);
+      console.log("Fotografias actuales", this.producto.fotografias);
+
+      this.fotografiasSelected.forEach(fotografiaToRemove => {
+        const index = this.producto.fotografias.indexOf(fotografiaToRemove);
+        let fotografiaId = fotografiaToRemove.fo_fotografia;
+
+        FotografiasRepository.deleteFotografia(fotografiaId).then(
+          rowsDeleted => {
+            console.log("rowsDeleted", rowsDeleted);
+            this.producto.fotografias.splice(index, 1);
+          }
+        );
+      });
+
+      this.close();
+    },
+    close() {
+      console.log("Cerrar el dialog");
+      this.dialogRemoveFotografias = false;
     }
   }
 };
