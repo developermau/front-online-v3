@@ -13,7 +13,15 @@
               </div>
             </v-card-text>
             <v-card-actions>
-              <v-btn block color="primary" dark @click="openDialog">Nueva Fotografia</v-btn>
+              <v-spacer></v-spacer>
+              <div>
+                <v-btn block color="primary" dark @click="openDialog">Nueva Fotografia</v-btn>
+              </div>
+              <v-spacer></v-spacer>
+              <div>
+                <v-btn block color="error" dark @click="openDialog">Eliminar Fotografias</v-btn>
+              </div>
+              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
           <!-- <v-card v-else dark>
@@ -92,7 +100,7 @@ export default {
       console.log("hasFotografias", result);
       return result;
     },
-    getFotografias(){
+    getFotografias() {
       return this.producto.fotografias;
     }
   },
