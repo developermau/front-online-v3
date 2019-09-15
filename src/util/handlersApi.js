@@ -90,7 +90,9 @@ export function fnHandlerError(errFrontend) {
         let nameTableWithConflict = "";
         if (resultError.index !== null && resultError.index !== undefined) {
           // Fotografia_ibfk_1
-          nameTableWithConflict = resultError.index.replace("_ibfk_1", "");
+          nameTableWithConflict = resultError.index.replace("_ibfk", "");
+          nameTableWithConflict = nameTableWithConflict.replace("_", "");
+          nameTableWithConflict = nameTableWithConflict.replace(new RegExp(/\d$/), "");
         }
 
         resultError.errorTypeName = "Referencia con otras tablas";
