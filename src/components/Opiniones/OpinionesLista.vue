@@ -1,6 +1,6 @@
 <template>
   <v-list three-line>
-    <v-list-item v-for="(opinion, index) in opiniones" :key="index">
+    <v-list-item v-for="opinion in opiniones" :key="opinion.op_opinion">
       <v-list-item-avatar>
         <v-img :src="opinion.usuario.us_avatar"></v-img>
       </v-list-item-avatar>
@@ -10,10 +10,9 @@
         <v-list-item-subtitle v-text="opinion.usuario.us_primer_nombre"></v-list-item-subtitle>
         <v-rating v-model="opinion.op_calificacion"></v-rating>
       </v-list-item-content>
-
-      <v-list-item-icon>
-        <v-btn>X</v-btn>
-      </v-list-item-icon>
+      <v-list-item-action>
+        <v-btn dark color="error">X</v-btn>
+      </v-list-item-action>
     </v-list-item>
   </v-list>
 </template>
