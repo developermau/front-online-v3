@@ -1,176 +1,173 @@
 <template>
-<div>
+  <div>
     <v-data-table :headers="headers" :items="productos" sort-by="calories" class="elevation-1">
-        <template v-slot:top>
-            <v-toolbar flat color="white">
-                <v-toolbar-title>Lista de productos</v-toolbar-title>
-                <v-divider class="mx-4" inset vertical></v-divider>
+      <template v-slot:top>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Lista de productos</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <div class="flex-grow-1"></div>
+          <!-- DIALOG: Item -->
+          <v-dialog v-model="dialogItem" max-width="500px" persistent>
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo Producto</v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6">
+                      <v-select
+                        v-model="selected.categoria"
+                        :items="categorias"
+                        item-text="ca_nombre"
+                        item-value="ca_categoria"
+                        label="Categorias"
+                        return-object
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                      <v-select
+                        v-model="selected.proveedor"
+                        :items="proveedores"
+                        item-text="pr_nombre"
+                        item-value="pr_proveedor"
+                        label="Proveedores"
+                        return-object
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field v-model="editedItem.pr_marca" label="Marca" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field v-model="editedItem.pr_nombre" label="Nombre" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                      <v-text-field
+                        v-model="editedItem.pr_stock"
+                        label="Stock"
+                        type="number"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                      <v-text-field v-model="editedItem.pr_year" label="Año" type="number" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                      <v-text-field
+                        v-model="editedItem.pr_precio_bs"
+                        label="Precio (en Bs.)"
+                        type="number"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                      <v-text-field
+                        v-model="editedItem.pr_precio_envio_bs"
+                        label="Precio envio (en Bs.)"
+                        type="number"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-textarea
+                        name="input-7-1"
+                        label="Descripcion"
+                        v-model="editedItem.pr_descripcion"
+                        required
+                      ></v-textarea>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
                 <div class="flex-grow-1"></div>
-                <!-- DIALOG: Item -->
-                <v-dialog v-model="dialogItem" max-width="500px" persistent>
-                    <template v-slot:activator="{ on }">
-                        <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo Producto</v-btn>
-                    </template>
-                    <v-card>
-                        <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container>
-                                <v-row>
-                                    <v-col cols="12" sm="6">
-                                        <v-select
-                                            v-model="selected.categoria"
-                                            :items="categorias"
-                                            item-text="ca_nombre"
-                                            item-value="ca_categoria"
-                                            label="Categorias"
-                                            return-object
-                                            required
-                                            ></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-select
-                                            v-model="selected.proveedor"
-                                            :items="proveedores"
-                                            item-text="pr_nombre"
-                                            item-value="pr_proveedor"
-                                            label="Proveedores"
-                                            return-object
-                                            required
-                                            ></v-select>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-text-field v-model="editedItem.pr_marca" label="Marca" required></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-text-field v-model="editedItem.pr_nombre" label="Nombre" required></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field
-                                            v-model="editedItem.pr_stock"
-                                            label="Stock"
-                                            type="number"
-                                            required
-                                            ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field v-model="editedItem.pr_year" label="Año" type="number" required></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field
-                                            v-model="editedItem.pr_precio_bs"
-                                            label="Precio (en Bs.)"
-                                            type="number"
-                                            required
-                                            ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field
-                                            v-model="editedItem.pr_precio_envio_bs"
-                                            label="Precio envio (en Bs.)"
-                                            type="number"
-                                            required
-                                            ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-textarea
-                                            name="input-7-1"
-                                            label="Descripcion"
-                                            v-model="editedItem.pr_descripcion"
-                                            required
-                                            ></v-textarea>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <div class="flex-grow-1"></div>
-                            <v-btn color="blue darken-1" text @click="closeDialogItem">Cancelar</v-btn>
-                            <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-                <!-- MODAL: Confirmation -->
-                <v-dialog dark color="error" v-model="dialogConfirm" persistent max-width="290">
-                    <v-card>
-                        <v-card-title class="headline">Confirmación de eliminacion</v-card-title>
-                        <v-card-text>
-                            ¿Esta seguro de eliminar el producto
-                            <b>{{editedItem.pr_nombre}}</b>?
-                        </v-card-text>
-                        <v-card-actions>
-                            <div class="flex-grow-1"></div>
-                            <v-btn color="error" dark @click="dialogConfirm = false">No</v-btn>
-                            <v-btn color="success" dark @click="deleteItem(deletedItem)">Si</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-                <!-- MODAL: Proveedor -->
-                <v-dialog dark color="warning" v-model="dialogCallProveedor" persistent max-width="290">
-                    <v-card>
-                        <v-card-title class="headline">Contactarse con el proveedor</v-card-title>
-                        <v-card-text>
-                            Llamar al
-                            <b>{{proveedorByItem.pr_telefono}}</b>
-                            por pedidos
-                        </v-card-text>
-                        <v-card-actions>
-                            <div class="flex-grow-1"></div>
-                            <v-btn color="error" dark @click="dialogCallProveedor = false">Cerrar</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </v-toolbar>
-        </template>
-        <template v-slot:item.pr_stock="{ item }">
-            <v-chip :color="getColor(item.pr_stock)" dark>{{ item.pr_stock }}</v-chip>
-        </template>
-        <template v-slot:body.append>
-            <tr>
-                <td>
-                    <v-text-field v-model="searchItem.categoria.ca_nombre" type="text" label="Contiene"></v-text-field>
-                </td>
-                <td>
-                    <v-text-field v-model="searchItem.pr_nombre" type="text" label="Contiene"></v-text-field>
-                </td>
-                <td>
-                    <v-text-field v-model="searchItem.pr_marca" type="text" label="Contiene"></v-text-field>
-                </td>
-                <td>
-                    <v-text-field v-model="searchItem.pr_stock" type="number" label="Menor que"></v-text-field>
-                </td>
-                <td>
-                    <v-text-field v-model="searchItem.proveedor.pr_nombre" type="text" label="Contiene"></v-text-field>
-                </td>
-                <td colspan="2"></td>
-            </tr>
-        </template>
-        <template v-slot:item.action="{ item }">
-            <v-icon size="20px" @click="showProduct(item)">mdi-eye</v-icon>
-            <v-icon size="20px" @click="editItem(item)">mdi-pencil</v-icon>
-            <v-icon size="20px" @click="openModal(item)">mdi-delete</v-icon>
-            <v-icon size="20px" @click="callProveedor(item)">mdi-phone</v-icon>
-        </template>
-        <template v-slot:no-data>
-            <v-btn color="primary" @click="fetchAllProductos">Reset</v-btn>
-        </template>
+                <v-btn color="blue darken-1" text @click="closeDialogItem">Cancelar</v-btn>
+                <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- MODAL: Confirmation -->
+          <v-dialog dark color="error" v-model="dialogConfirm" persistent max-width="290">
+            <v-card>
+              <v-card-title class="headline">Confirmación de eliminacion</v-card-title>
+              <v-card-text>
+                ¿Esta seguro de eliminar el producto
+                <b>{{editedItem.pr_nombre}}</b>?
+              </v-card-text>
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn color="error" dark @click="dialogConfirm = false">No</v-btn>
+                <v-btn color="success" dark @click="deleteItem(deletedItem)">Si</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- MODAL: Proveedor -->
+          <v-dialog dark color="warning" v-model="dialogCallProveedor" persistent max-width="290">
+            <v-card>
+              <v-card-title class="headline">Contactarse con el proveedor</v-card-title>
+              <v-card-text>
+                Llamar al
+                <b>{{proveedorByItem.pr_telefono}}</b>
+                por pedidos
+              </v-card-text>
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn color="error" dark @click="dialogCallProveedor = false">Cerrar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.pr_stock="{ item }">
+        <v-chip :color="getColor(item.pr_stock)" dark>{{ item.pr_stock }}</v-chip>
+      </template>
+      <template v-slot:body.append>
+        <tr>
+          <td>
+            <v-text-field v-model="searchItem.categoria.ca_nombre" type="text" label="Contiene"></v-text-field>
+          </td>
+          <td>
+            <v-text-field v-model="searchItem.pr_nombre" type="text" label="Contiene"></v-text-field>
+          </td>
+          <td>
+            <v-text-field v-model="searchItem.pr_marca" type="text" label="Contiene"></v-text-field>
+          </td>
+          <td>
+            <v-text-field v-model="searchItem.pr_stock" type="number" label="Menor que"></v-text-field>
+          </td>
+          <td>
+            <v-text-field v-model="searchItem.proveedor.pr_nombre" type="text" label="Contiene"></v-text-field>
+          </td>
+          <td colspan="2"></td>
+        </tr>
+      </template>
+      <template v-slot:item.action="{ item }">
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-icon size="20px" @click="showProduct(item)">mdi-eye</v-icon>
+          <v-spacer></v-spacer>
+          <v-icon size="20px" @click="editItem(item)">mdi-pencil</v-icon>
+          <v-spacer></v-spacer>
+          <v-icon size="20px" @click="openModal(item)">mdi-delete</v-icon>
+          <v-spacer></v-spacer>
+          <v-icon size="20px" @click="callProveedor(item)">mdi-phone</v-icon>
+          <v-spacer></v-spacer>
+        </v-row>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="fetchAllProductos">Reset</v-btn>
+      </template>
     </v-data-table>
-    <v-snackbar
-        color="danger"
-        v-model="snackbar"
-        :timeout="10000"
-        >
-        {{ errorBackend.errorTypeDetail }}
-        <v-btn
-            color="blue"
-            text
-            @click="snackbar = false"
-            >
-            Close
-        </v-btn>
+    <v-snackbar color="danger" v-model="snackbar" :timeout="10000">
+      {{ errorBackend.errorTypeDetail }}
+      <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
     </v-snackbar>
-</div>
+  </div>
 </template>
 
 <script>
@@ -383,7 +380,7 @@ export default {
         const error = backendResponse.data;
 
         this.errorBackend = fnHandlerError(error);
-        console.log('this.errorBackend', this.errorBackend);
+        console.log("this.errorBackend", this.errorBackend);
         this.snackbar = true;
       }
     },
