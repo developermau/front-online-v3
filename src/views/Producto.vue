@@ -130,6 +130,19 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-card>
+            <v-card-title>Usuarios que le gusta el producto</v-card-title>
+            <v-card-text v-if="hasMeGustas">
+              <MeGustaLista :meGustaList="getMeGustas" />
+            </v-card-text>
+            <v-card-text v-else>
+              <span>No tiene usuarios interesados en este producto</span>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </section>
 </template>
@@ -140,13 +153,16 @@ import FotografiaCarrusel from "../components/Fotografia/FotografiaCarrusel";
 import FotografiaListItemGroup from "../components/Fotografia/FotografiaListItemGroup";
 import ProductoCardDetails from "../components/Producto/ProductoCardDetails";
 import OpinionesLista from "../components/Opiniones/OpinionesLista";
+import MeGustaLista from "../components/MeGusta/MeGustaLista";
 
 // Repository Factory
 import { RepositoryFactory } from "../repositories/base/RepositoryFactory";
-// Repositories
+// Repositories: Entities
 const ProductosRepository = RepositoryFactory.get("productos");
 const FotografiasRepository = RepositoryFactory.get("fotografias");
 const FotografiasUploadsRepository = RepositoryFactory.get("uploadFotografias");
+// Repositories: Relaciones
+const RelGustaRepository = RepositoryFactory.get("gustas");
 
 export default {
   props: ["id"],
@@ -155,7 +171,8 @@ export default {
     FotografiaCarrusel,
     FotografiaListItemGroup,
     ProductoCardDetails,
-    OpinionesLista
+    OpinionesLista,
+    MeGustaLista
   },
   data: function() {
     return {
@@ -163,7 +180,8 @@ export default {
       dialogUploadFotografias: false,
       dialogRemoveFotografias: false,
       fotografias: [],
-      fotografiasSelected: []
+      fotografiasSelected: [],
+      meGustasDB: []
     };
   },
   // async beforeRouteEnter(to, from, next) {
@@ -172,6 +190,7 @@ export default {
   // },
   created() {
     this.fetchProducto(this.id);
+    this.fetchMeGustasByProducto(this.id);
   },
   computed: {
     hasFotografias() {
@@ -217,12 +236,33 @@ export default {
         this.producto.opiniones.length > 0;
       console.log("hasOpiniones", result);
       return result;
+    },
+    hasMeGustas() {
+      var result =
+        this.meGustasDB !== null &&
+        this.meGustasDB !== undefined &&
+        this.meGustasDB.length > 0;
+      console.log("hasMeGustas", result);
+      return result;
+    },
+    getMeGustas() {
+      if (this.meGustasDB === null || this.meGustasDB === undefined) {
+        return [];
+      }
+
+      return this.meGustasDB;
     }
   },
   methods: {
     async fetchProducto(productoId) {
       const { data } = await ProductosRepository.getProducto(productoId);
       this.producto = data.data;
+    },
+    async fetchMeGustasByProducto(productoId) {
+      const { data } = await RelGustaRepository.getRelationListByProducto(
+        productoId
+      );
+      this.meGustasDB = data;
     },
     openDialogUploadFotografias() {
       this.fotografias = [];
