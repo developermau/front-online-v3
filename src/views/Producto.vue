@@ -121,8 +121,11 @@
         <v-col cols="12">
           <v-card>
             <v-card-title>Opiniones</v-card-title>
-            <v-card-text>
-              <OpinionesLista :opiniones="producto.opiniones" />
+            <v-card-text v-if="hasOpiniones">
+              <OpinionesLista :opiniones="getOpiniones" />
+            </v-card-text>
+            <v-card-text v-else>
+              <span>No hay opiniones registradas</span>
             </v-card-text>
           </v-card>
         </v-col>
@@ -180,7 +183,40 @@ export default {
       return result;
     },
     getFotografias() {
+      if (this.producto === null || this.producto === undefined) {
+        return [];
+      }
+
+      if (
+        this.producto.fotografias === null ||
+        this.producto.fotografias === undefined
+      ) {
+        return [];
+      }
+
       return this.producto.fotografias;
+    },
+    getOpiniones() {
+      if (this.producto === null || this.producto === undefined) {
+        return [];
+      }
+
+      if (
+        this.producto.opiniones === null ||
+        this.producto.opiniones === undefined
+      ) {
+        return [];
+      }
+
+      return this.producto.opiniones;
+    },
+    hasOpiniones() {
+      var result =
+        this.producto.opiniones !== null &&
+        this.producto.opiniones !== undefined &&
+        this.producto.opiniones.length > 0;
+      console.log("hasOpiniones", result);
+      return result;
     }
   },
   methods: {
