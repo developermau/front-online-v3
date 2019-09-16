@@ -2,6 +2,7 @@ import ProductosRepository from "../api/productosRepository";
 import CategoriasRepository from "../api/categoriasRepository";
 import ProveedoresRepository from "../api/proveedoresRepository";
 import FotografiasRepository from "../api/fotografiasRepository";
+import OpinionesRepository from "../api/opinionesRepository";
 // relaciones
 import RelGustaRepository from "../api/relGustaRepository";
 // Uploads
@@ -13,6 +14,7 @@ const repositories = {
   categorias: CategoriasRepository,
   proveedores: ProveedoresRepository,
   fotografias: FotografiasRepository,
+  opiniones: OpinionesRepository,
   // relaciones
   gustas: RelGustaRepository,
   // Uploads
